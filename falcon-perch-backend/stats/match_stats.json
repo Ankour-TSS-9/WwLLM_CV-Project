@@ -1,6 +1,6 @@
 {
   "meta": {
-    "video_path": ".\\input_videos\\08fd33_4.mp4",
+    "video_path": "input_videos/08fd33_4.mp4",
     "fps": 25.0,
     "frames": 750,
     "duration_s": 30.0,
@@ -17,8 +17,8 @@
       "possession_known_frames": 302,
       "players_tracked": 23,
       "distance_m": 2764.24,
-      "passes": 3,
-      "progressive_passes": 0,
+      "passes": 2,
+      "progressive_passes": 1,
       "turnovers_won": 0,
       "sprints": 39,
       "box_entries": 3,
@@ -319,8 +319,8 @@
       "frames_visible": 750,
       "minutes_visible": 0.5,
       "touches": 1,
-      "passes": 1,
-      "passes_received": 0,
+      "passes": 0,
+      "passes_received": 1,
       "progressive_passes": 0,
       "turnovers_lost": 0,
       "turnovers_won": 0,
@@ -377,9 +377,9 @@
       "frames_visible": 750,
       "minutes_visible": 0.5,
       "touches": 2,
-      "passes": 0,
-      "passes_received": 1,
-      "progressive_passes": 0,
+      "passes": 1,
+      "passes_received": 0,
+      "progressive_passes": 1,
       "turnovers_lost": 0,
       "turnovers_won": 0,
       "carries": 1,
@@ -435,8 +435,8 @@
       "frames_visible": 750,
       "minutes_visible": 0.5,
       "touches": 1,
-      "passes": 0,
-      "passes_received": 0,
+      "passes": 1,
+      "passes_received": 1,
       "progressive_passes": 0,
       "turnovers_lost": 0,
       "turnovers_won": 0,
@@ -581,7 +581,7 @@
       "minutes_visible": 0.496,
       "touches": 1,
       "passes": 0,
-      "passes_received": 1,
+      "passes_received": 0,
       "progressive_passes": 0,
       "turnovers_lost": 0,
       "turnovers_won": 0,
@@ -870,7 +870,7 @@
       "frames_visible": 373,
       "minutes_visible": 0.249,
       "touches": 1,
-      "passes": 1,
+      "passes": 0,
       "passes_received": 0,
       "progressive_passes": 0,
       "turnovers_lost": 0,
@@ -928,8 +928,8 @@
       "frames_visible": 246,
       "minutes_visible": 0.164,
       "touches": 1,
-      "passes": 1,
-      "passes_received": 1,
+      "passes": 0,
+      "passes_received": 0,
       "progressive_passes": 0,
       "turnovers_lost": 0,
       "turnovers_won": 0,
@@ -1358,14 +1358,11 @@
     }
   ],
   "pass_network": {
-    "40": {
-      "43": 1
+    "12": {
+      "16": 1
     },
-    "43": {
-      "12": 1
-    },
-    "1": {
-      "7": 1
+    "16": {
+      "1": 1
     }
   },
   "event_counts": {
@@ -1373,7 +1370,7 @@
     "carry": 8,
     "possession_start": 12,
     "box_entry": 4,
-    "pass": 3,
+    "pass": 2,
     "shot_or_clearance": 2
   },
   "events": [
@@ -1842,20 +1839,6 @@
     {
       "time": 21.92,
       "frame": 548,
-      "from_player_id": 40,
-      "to_player_id": 43,
-      "from_team": 1,
-      "to_team": 1,
-      "ball_travel": 78.29,
-      "unit": "px",
-      "gap_s": 0.72,
-      "type": "pass",
-      "team": 1,
-      "progressive": false
-    },
-    {
-      "time": 21.92,
-      "frame": 548,
       "type": "possession_start",
       "team": 1,
       "player_id": 43,
@@ -1883,20 +1866,6 @@
       "unit": "m",
       "end_time": 25.12,
       "zone": "final_third"
-    },
-    {
-      "time": 24.2,
-      "frame": 605,
-      "from_player_id": 43,
-      "to_player_id": 12,
-      "from_team": 1,
-      "to_team": 1,
-      "ball_travel": 36.32,
-      "unit": "m",
-      "gap_s": 1.32,
-      "type": "pass",
-      "team": 1,
-      "progressive": false
     },
     {
       "time": 24.2,
@@ -1973,6 +1942,23 @@
     {
       "time": 26.2,
       "frame": 655,
+      "from_player_id": 12,
+      "to_player_id": 16,
+      "from_team": 1,
+      "to_team": 1,
+      "ball_travel": 0.21,
+      "unit": "m",
+      "gap_s": 0.04,
+      "type": "pass",
+      "team": 1,
+      "team_id": 1,
+      "passer_id": 12,
+      "receiver_id": 16,
+      "progressive": true
+    },
+    {
+      "time": 26.2,
+      "frame": 655,
       "type": "possession_start",
       "team": 1,
       "player_id": 16,
@@ -2013,6 +1999,23 @@
     {
       "time": 27.16,
       "frame": 679,
+      "from_player_id": 16,
+      "to_player_id": 1,
+      "from_team": 1,
+      "to_team": 1,
+      "ball_travel": 1.16,
+      "unit": "m",
+      "gap_s": 0.04,
+      "type": "pass",
+      "team": 1,
+      "team_id": 1,
+      "passer_id": 16,
+      "receiver_id": 1,
+      "progressive": false
+    },
+    {
+      "time": 27.16,
+      "frame": 679,
       "type": "possession_start",
       "team": 1,
       "player_id": 1,
@@ -2048,20 +2051,6 @@
       "role": "player",
       "speed_kmh": 35.4,
       "duration_s": 1.4
-    },
-    {
-      "time": 28.2,
-      "frame": 705,
-      "from_player_id": 1,
-      "to_player_id": 7,
-      "from_team": 1,
-      "to_team": 1,
-      "ball_travel": 11.98,
-      "unit": "m",
-      "gap_s": 0.56,
-      "type": "pass",
-      "team": 1,
-      "progressive": false
     },
     {
       "time": 28.2,
