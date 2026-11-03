@@ -1,0 +1,2368 @@
+{
+  "frames": [
+    {
+      "frame": 0,
+      "camera_cumulative_px": [
+        0.0,
+        0.0
+      ],
+      "camera_valid": true,
+      "mapper_found": true,
+      "players": [
+        {
+          "id": 1,
+          "foot_px": [
+            607,
+            673
+          ],
+          "adj_applied": "False",
+          "transform": [
+            33.23,
+            33.74
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 2,
+          "foot_px": [
+            1591,
+            696
+          ],
+          "adj_applied": "False",
+          "transform": [
+            86.95,
+            36.25
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 3,
+          "foot_px": [
+            1406,
+            903
+          ],
+          "adj_applied": "False",
+          "transform": [
+            76.78,
+            53.93
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 4,
+          "foot_px": [
+            555,
+            786
+          ],
+          "adj_applied": "False",
+          "transform": [
+            30.36,
+            43.42
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 5,
+          "foot_px": [
+            1330,
+            516
+          ],
+          "adj_applied": "False",
+          "transform": [
+            72.76,
+            20.64
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 6,
+          "foot_px": [
+            376,
+            826
+          ],
+          "adj_applied": "False",
+          "transform": [
+            20.57,
+            46.76
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 7,
+          "foot_px": [
+            239,
+            594
+          ],
+          "adj_applied": "False",
+          "transform": [
+            13.17,
+            26.76
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 8,
+          "foot_px": [
+            1246,
+            501
+          ],
+          "adj_applied": "False",
+          "transform": [
+            68.18,
+            19.31
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 9,
+          "foot_px": [
+            1173,
+            412
+          ],
+          "adj_applied": "False",
+          "transform": [
+            64.22,
+            11.63
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 10,
+          "foot_px": [
+            348,
+            569
+          ],
+          "adj_applied": "False",
+          "transform": [
+            19.13,
+            24.67
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 11,
+          "foot_px": [
+            1292,
+            462
+          ],
+          "adj_applied": "False",
+          "transform": [
+            70.7,
+            15.98
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 12,
+          "foot_px": [
+            1011,
+            526
+          ],
+          "adj_applied": "False",
+          "transform": [
+            55.34,
+            21.33
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 13,
+          "foot_px": [
+            889,
+            423
+          ],
+          "adj_applied": "False",
+          "transform": [
+            48.72,
+            12.42
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 14,
+          "foot_px": [
+            387,
+            366
+          ],
+          "adj_applied": "False",
+          "transform": [
+            21.33,
+            7.25
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 15,
+          "foot_px": [
+            1873,
+            917
+          ],
+          "adj_applied": "False",
+          "transform": [
+            102.27,
+            55.38
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 16,
+          "foot_px": [
+            873,
+            723
+          ],
+          "adj_applied": "False",
+          "transform": [
+            47.74,
+            38.18
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 17,
+          "foot_px": [
+            788,
+            438
+          ],
+          "adj_applied": "False",
+          "transform": [
+            43.2,
+            13.65
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 18,
+          "foot_px": [
+            1103,
+            359
+          ],
+          "adj_applied": "False",
+          "transform": [
+            60.42,
+            7.04
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 19,
+          "foot_px": [
+            959,
+            275
+          ],
+          "adj_applied": "False",
+          "transform": [
+            52.59,
+            0.0
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 20,
+          "foot_px": [
+            1163,
+            796
+          ],
+          "adj_applied": "False",
+          "transform": [
+            63.55,
+            44.61
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 21,
+          "foot_px": [
+            317,
+            274
+          ],
+          "adj_applied": "False",
+          "transform": [
+            17.54,
+            0.0
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 22,
+          "foot_px": [
+            790,
+            491
+          ],
+          "adj_applied": "False",
+          "transform": [
+            43.29,
+            18.21
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 23,
+          "foot_px": [
+            1910,
+            442
+          ],
+          "adj_applied": "False",
+          "transform": [
+            104.45,
+            14.6
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 24,
+          "foot_px": [
+            147,
+            1080
+          ],
+          "adj_applied": "False",
+          "transform": [
+            7.98,
+            68.0
+          ],
+          "status": "ok"
+        }
+      ],
+      "ball": {
+        "center_px": [
+          1194,
+          857
+        ],
+        "transform": [
+          65.22,
+          49.86
+        ]
+      },
+      "auto_length_m": 49.64407730102539,
+      "auto_width_m": 30.0,
+      "fifa_length_m": 105.0,
+      "fifa_width_m": 68.0,
+      "H_cond": 3083.996158289468
+    },
+    {
+      "frame": 125,
+      "camera_cumulative_px": [
+        581.97314453125,
+        78.74318313598633
+      ],
+      "camera_valid": true,
+      "mapper_found": true,
+      "players": [
+        {
+          "id": 1,
+          "foot_px": [
+            1117,
+            669
+          ],
+          "adj_applied": "True",
+          "transform": [
+            29.33,
+            26.59
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 2,
+          "foot_px": [
+            1530,
+            653
+          ],
+          "adj_applied": "True",
+          "transform": [
+            51.89,
+            25.44
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 3,
+          "foot_px": [
+            966,
+            842
+          ],
+          "adj_applied": "True",
+          "transform": [
+            21.03,
+            41.37
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 4,
+          "foot_px": [
+            631,
+            683
+          ],
+          "adj_applied": "True",
+          "transform": [
+            2.8,
+            27.54
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 5,
+          "foot_px": [
+            1593,
+            569
+          ],
+          "adj_applied": "True",
+          "transform": [
+            55.35,
+            18.26
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 6,
+          "foot_px": [
+            458,
+            700
+          ],
+          "adj_applied": "True",
+          "transform": [
+            0.0,
+            28.9
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 7,
+          "foot_px": [
+            626,
+            529
+          ],
+          "adj_applied": "True",
+          "transform": [
+            2.58,
+            14.31
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 8,
+          "foot_px": [
+            1575,
+            528
+          ],
+          "adj_applied": "True",
+          "transform": [
+            54.39,
+            14.73
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 9,
+          "foot_px": [
+            1527,
+            467
+          ],
+          "adj_applied": "True",
+          "transform": [
+            51.79,
+            9.46
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 10,
+          "foot_px": [
+            741,
+            540
+          ],
+          "adj_applied": "True",
+          "transform": [
+            8.85,
+            15.31
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 11,
+          "foot_px": [
+            1529,
+            484
+          ],
+          "adj_applied": "True",
+          "transform": [
+            51.89,
+            10.92
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 12,
+          "foot_px": [
+            1202,
+            526
+          ],
+          "adj_applied": "True",
+          "transform": [
+            34.02,
+            14.36
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 13,
+          "foot_px": [
+            1233,
+            449
+          ],
+          "adj_applied": "True",
+          "transform": [
+            35.74,
+            7.76
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 14,
+          "foot_px": [
+            944,
+            376
+          ],
+          "adj_applied": "True",
+          "transform": [
+            19.99,
+            1.33
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 16,
+          "foot_px": [
+            1212,
+            670
+          ],
+          "adj_applied": "True",
+          "transform": [
+            34.52,
+            26.73
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 17,
+          "foot_px": [
+            1121,
+            457
+          ],
+          "adj_applied": "True",
+          "transform": [
+            29.62,
+            8.39
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 18,
+          "foot_px": [
+            1478,
+            415
+          ],
+          "adj_applied": "True",
+          "transform": [
+            49.13,
+            4.97
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 19,
+          "foot_px": [
+            1411,
+            330
+          ],
+          "adj_applied": "True",
+          "transform": [
+            45.5,
+            0.0
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 22,
+          "foot_px": [
+            1106,
+            503
+          ],
+          "adj_applied": "True",
+          "transform": [
+            28.79,
+            12.33
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 24,
+          "foot_px": [
+            766,
+            868
+          ],
+          "adj_applied": "True",
+          "transform": [
+            10.1,
+            43.5
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 26,
+          "foot_px": [
+            1371,
+            763
+          ],
+          "adj_applied": "True",
+          "transform": [
+            43.17,
+            34.81
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 28,
+          "foot_px": [
+            1436,
+            900
+          ],
+          "adj_applied": "True",
+          "transform": [
+            46.67,
+            46.61
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 31,
+          "foot_px": [
+            99,
+            528
+          ],
+          "adj_applied": "True",
+          "transform": [
+            0.0,
+            13.94
+          ],
+          "status": "ok"
+        }
+      ],
+      "ball": {
+        "center_px": [
+          843,
+          896
+        ],
+        "transform": [
+          14.3,
+          45.95
+        ]
+      },
+      "auto_length_m": 49.64407730102539,
+      "auto_width_m": 30.0,
+      "fifa_length_m": 105.0,
+      "fifa_width_m": 68.0,
+      "H_cond": 3083.996158289468
+    },
+    {
+      "frame": 250,
+      "camera_cumulative_px": [
+        749.5747680664062,
+        84.83567428588867
+      ],
+      "camera_valid": true,
+      "mapper_found": true,
+      "players": [
+        {
+          "id": 1,
+          "foot_px": [
+            959,
+            558
+          ],
+          "adj_applied": "True",
+          "transform": [
+            11.6,
+            16.36
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 2,
+          "foot_px": [
+            1466,
+            601
+          ],
+          "adj_applied": "True",
+          "transform": [
+            39.26,
+            20.33
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 3,
+          "foot_px": [
+            911,
+            816
+          ],
+          "adj_applied": "True",
+          "transform": [
+            8.89,
+            38.5
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 4,
+          "foot_px": [
+            678,
+            607
+          ],
+          "adj_applied": "True",
+          "transform": [
+            0.0,
+            20.42
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 5,
+          "foot_px": [
+            1454,
+            517
+          ],
+          "adj_applied": "True",
+          "transform": [
+            38.64,
+            13.11
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 6,
+          "foot_px": [
+            531,
+            724
+          ],
+          "adj_applied": "True",
+          "transform": [
+            0.0,
+            30.39
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 7,
+          "foot_px": [
+            652,
+            501
+          ],
+          "adj_applied": "True",
+          "transform": [
+            0.0,
+            11.3
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 8,
+          "foot_px": [
+            1475,
+            490
+          ],
+          "adj_applied": "True",
+          "transform": [
+            39.79,
+            10.8
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 9,
+          "foot_px": [
+            1379,
+            524
+          ],
+          "adj_applied": "True",
+          "transform": [
+            34.54,
+            13.67
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 10,
+          "foot_px": [
+            745,
+            494
+          ],
+          "adj_applied": "True",
+          "transform": [
+            0.0,
+            10.75
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 11,
+          "foot_px": [
+            1444,
+            466
+          ],
+          "adj_applied": "True",
+          "transform": [
+            38.11,
+            8.72
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 12,
+          "foot_px": [
+            1086,
+            474
+          ],
+          "adj_applied": "True",
+          "transform": [
+            18.56,
+            9.21
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 13,
+          "foot_px": [
+            1038,
+            400
+          ],
+          "adj_applied": "True",
+          "transform": [
+            15.96,
+            2.83
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 14,
+          "foot_px": [
+            784,
+            357
+          ],
+          "adj_applied": "True",
+          "transform": [
+            2.11,
+            0.0
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 16,
+          "foot_px": [
+            1147,
+            596
+          ],
+          "adj_applied": "True",
+          "transform": [
+            21.85,
+            19.73
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 17,
+          "foot_px": [
+            1086,
+            433
+          ],
+          "adj_applied": "True",
+          "transform": [
+            18.57,
+            5.69
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 18,
+          "foot_px": [
+            1399,
+            388
+          ],
+          "adj_applied": "True",
+          "transform": [
+            35.68,
+            2.0
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 20,
+          "foot_px": [
+            1499,
+            590
+          ],
+          "adj_applied": "True",
+          "transform": [
+            41.07,
+            19.4
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 22,
+          "foot_px": [
+            1007,
+            459
+          ],
+          "adj_applied": "True",
+          "transform": [
+            14.25,
+            7.88
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 26,
+          "foot_px": [
+            1374,
+            738
+          ],
+          "adj_applied": "True",
+          "transform": [
+            34.19,
+            32.05
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 31,
+          "foot_px": [
+            268,
+            522
+          ],
+          "adj_applied": "True",
+          "transform": [
+            0.0,
+            12.9
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 32,
+          "foot_px": [
+            794,
+            315
+          ],
+          "adj_applied": "True",
+          "transform": [
+            2.67,
+            0.0
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 35,
+          "foot_px": [
+            1675,
+            894
+          ],
+          "adj_applied": "True",
+          "transform": [
+            50.57,
+            45.61
+          ],
+          "status": "ok"
+        }
+      ],
+      "ball": {
+        "center_px": [
+          296,
+          514
+        ],
+        "transform": [
+          0.0,
+          12.23
+        ]
+      },
+      "auto_length_m": 49.64407730102539,
+      "auto_width_m": 30.0,
+      "fifa_length_m": 105.0,
+      "fifa_width_m": 68.0,
+      "H_cond": 3083.996158289468
+    },
+    {
+      "frame": 375,
+      "camera_cumulative_px": [
+        438.1578063964844,
+        44.85365295410156
+      ],
+      "camera_valid": true,
+      "mapper_found": true,
+      "players": [
+        {
+          "id": 1,
+          "foot_px": [
+            786,
+            560
+          ],
+          "adj_applied": "True",
+          "transform": [
+            19.14,
+            20.04
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 3,
+          "foot_px": [
+            903,
+            746
+          ],
+          "adj_applied": "True",
+          "transform": [
+            25.46,
+            36.08
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 4,
+          "foot_px": [
+            503,
+            638
+          ],
+          "adj_applied": "True",
+          "transform": [
+            3.66,
+            26.59
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 5,
+          "foot_px": [
+            1290,
+            564
+          ],
+          "adj_applied": "True",
+          "transform": [
+            46.65,
+            20.66
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 6,
+          "foot_px": [
+            405,
+            693
+          ],
+          "adj_applied": "True",
+          "transform": [
+            0.0,
+            31.26
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 7,
+          "foot_px": [
+            475,
+            543
+          ],
+          "adj_applied": "True",
+          "transform": [
+            2.17,
+            18.42
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 8,
+          "foot_px": [
+            1476,
+            516
+          ],
+          "adj_applied": "True",
+          "transform": [
+            56.83,
+            16.63
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 10,
+          "foot_px": [
+            458,
+            556
+          ],
+          "adj_applied": "True",
+          "transform": [
+            1.23,
+            19.52
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 11,
+          "foot_px": [
+            1447,
+            520
+          ],
+          "adj_applied": "True",
+          "transform": [
+            55.24,
+            16.96
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 12,
+          "foot_px": [
+            968,
+            493
+          ],
+          "adj_applied": "True",
+          "transform": [
+            29.1,
+            14.38
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 13,
+          "foot_px": [
+            785,
+            432
+          ],
+          "adj_applied": "True",
+          "transform": [
+            19.13,
+            9.05
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 14,
+          "foot_px": [
+            534,
+            386
+          ],
+          "adj_applied": "True",
+          "transform": [
+            5.44,
+            4.96
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 16,
+          "foot_px": [
+            1090,
+            576
+          ],
+          "adj_applied": "True",
+          "transform": [
+            35.73,
+            21.58
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 17,
+          "foot_px": [
+            1019,
+            431
+          ],
+          "adj_applied": "True",
+          "transform": [
+            31.9,
+            9.09
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 18,
+          "foot_px": [
+            1157,
+            367
+          ],
+          "adj_applied": "True",
+          "transform": [
+            39.46,
+            3.66
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 19,
+          "foot_px": [
+            1063,
+            319
+          ],
+          "adj_applied": "True",
+          "transform": [
+            34.34,
+            0.0
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 20,
+          "foot_px": [
+            1271,
+            544
+          ],
+          "adj_applied": "True",
+          "transform": [
+            45.62,
+            18.93
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 22,
+          "foot_px": [
+            719,
+            464
+          ],
+          "adj_applied": "True",
+          "transform": [
+            15.51,
+            11.76
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 26,
+          "foot_px": [
+            1318,
+            745
+          ],
+          "adj_applied": "True",
+          "transform": [
+            48.12,
+            36.22
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 32,
+          "foot_px": [
+            606,
+            295
+          ],
+          "adj_applied": "True",
+          "transform": [
+            9.4,
+            0.0
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 35,
+          "foot_px": [
+            1794,
+            888
+          ],
+          "adj_applied": "True",
+          "transform": [
+            74.06,
+            48.76
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 37,
+          "foot_px": [
+            635,
+            986
+          ],
+          "adj_applied": "True",
+          "transform": [
+            10.75,
+            56.55
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 40,
+          "foot_px": [
+            1398,
+            553
+          ],
+          "adj_applied": "True",
+          "transform": [
+            52.55,
+            19.77
+          ],
+          "status": "ok"
+        }
+      ],
+      "ball": {
+        "center_px": [
+          692,
+          936
+        ],
+        "transform": [
+          13.88,
+          52.29
+        ]
+      },
+      "auto_length_m": 49.64407730102539,
+      "auto_width_m": 30.0,
+      "fifa_length_m": 105.0,
+      "fifa_width_m": 68.0,
+      "H_cond": 3083.996158289468
+    },
+    {
+      "frame": 500,
+      "camera_cumulative_px": [
+        -138.14227294921875,
+        43.999369621276855
+      ],
+      "camera_valid": true,
+      "mapper_found": true,
+      "players": [
+        {
+          "id": 1,
+          "foot_px": [
+            766,
+            629
+          ],
+          "adj_applied": "True",
+          "transform": [
+            49.49,
+            26.34
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 3,
+          "foot_px": [
+            1069,
+            734
+          ],
+          "adj_applied": "True",
+          "transform": [
+            65.99,
+            35.52
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 4,
+          "foot_px": [
+            485,
+            719
+          ],
+          "adj_applied": "True",
+          "transform": [
+            34.12,
+            33.92
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 5,
+          "foot_px": [
+            1526,
+            665
+          ],
+          "adj_applied": "True",
+          "transform": [
+            90.97,
+            29.84
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 6,
+          "foot_px": [
+            358,
+            742
+          ],
+          "adj_applied": "True",
+          "transform": [
+            27.17,
+            35.83
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 7,
+          "foot_px": [
+            200,
+            617
+          ],
+          "adj_applied": "True",
+          "transform": [
+            18.59,
+            25.01
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 8,
+          "foot_px": [
+            1372,
+            515
+          ],
+          "adj_applied": "True",
+          "transform": [
+            82.61,
+            16.87
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 9,
+          "foot_px": [
+            967,
+            590
+          ],
+          "adj_applied": "True",
+          "transform": [
+            60.47,
+            23.1
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 10,
+          "foot_px": [
+            230,
+            635
+          ],
+          "adj_applied": "True",
+          "transform": [
+            20.22,
+            26.57
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 11,
+          "foot_px": [
+            1251,
+            536
+          ],
+          "adj_applied": "True",
+          "transform": [
+            76.0,
+            18.61
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 12,
+          "foot_px": [
+            959,
+            519
+          ],
+          "adj_applied": "True",
+          "transform": [
+            60.06,
+            17.0
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 13,
+          "foot_px": [
+            611,
+            481
+          ],
+          "adj_applied": "True",
+          "transform": [
+            41.08,
+            13.55
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 14,
+          "foot_px": [
+            239,
+            461
+          ],
+          "adj_applied": "True",
+          "transform": [
+            20.77,
+            11.63
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 16,
+          "foot_px": [
+            839,
+            635
+          ],
+          "adj_applied": "True",
+          "transform": [
+            53.47,
+            26.9
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 17,
+          "foot_px": [
+            747,
+            464
+          ],
+          "adj_applied": "True",
+          "transform": [
+            48.51,
+            12.16
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 18,
+          "foot_px": [
+            858,
+            385
+          ],
+          "adj_applied": "True",
+          "transform": [
+            54.59,
+            5.43
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 19,
+          "foot_px": [
+            637,
+            360
+          ],
+          "adj_applied": "True",
+          "transform": [
+            42.54,
+            3.17
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 20,
+          "foot_px": [
+            1149,
+            524
+          ],
+          "adj_applied": "True",
+          "transform": [
+            70.43,
+            17.53
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 22,
+          "foot_px": [
+            529,
+            505
+          ],
+          "adj_applied": "True",
+          "transform": [
+            36.59,
+            15.56
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 26,
+          "foot_px": [
+            1341,
+            752
+          ],
+          "adj_applied": "True",
+          "transform": [
+            80.84,
+            37.22
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 32,
+          "foot_px": [
+            218,
+            306
+          ],
+          "adj_applied": "True",
+          "transform": [
+            19.68,
+            0.0
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 35,
+          "foot_px": [
+            1810,
+            793
+          ],
+          "adj_applied": "True",
+          "transform": [
+            105.0,
+            40.99
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 37,
+          "foot_px": [
+            104,
+            1030
+          ],
+          "adj_applied": "True",
+          "transform": [
+            13.21,
+            60.43
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 40,
+          "foot_px": [
+            1732,
+            683
+          ],
+          "adj_applied": "True",
+          "transform": [
+            102.21,
+            31.5
+          ],
+          "status": "ok"
+        }
+      ],
+      "ball": {
+        "center_px": [
+          1828,
+          658
+        ],
+        "transform": [
+          105.0,
+          29.4
+        ]
+      },
+      "auto_length_m": 49.64407730102539,
+      "auto_width_m": 30.0,
+      "fifa_length_m": 105.0,
+      "fifa_width_m": 68.0,
+      "H_cond": 3083.996158289468
+    },
+    {
+      "frame": 625,
+      "camera_cumulative_px": [
+        -277.54127502441406,
+        96.34980821609497
+      ],
+      "camera_valid": true,
+      "mapper_found": true,
+      "players": [
+        {
+          "id": 1,
+          "foot_px": [
+            809,
+            578
+          ],
+          "adj_applied": "True",
+          "transform": [
+            59.48,
+            17.56
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 3,
+          "foot_px": [
+            983,
+            664
+          ],
+          "adj_applied": "True",
+          "transform": [
+            68.95,
+            25.04
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 4,
+          "foot_px": [
+            405,
+            695
+          ],
+          "adj_applied": "True",
+          "transform": [
+            37.38,
+            27.4
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 5,
+          "foot_px": [
+            1484,
+            613
+          ],
+          "adj_applied": "True",
+          "transform": [
+            96.32,
+            20.93
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 6,
+          "foot_px": [
+            334,
+            698
+          ],
+          "adj_applied": "True",
+          "transform": [
+            33.51,
+            27.61
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 7,
+          "foot_px": [
+            322,
+            588
+          ],
+          "adj_applied": "True",
+          "transform": [
+            32.89,
+            18.16
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 8,
+          "foot_px": [
+            1126,
+            433
+          ],
+          "adj_applied": "True",
+          "transform": [
+            76.84,
+            5.28
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 9,
+          "foot_px": [
+            1041,
+            534
+          ],
+          "adj_applied": "True",
+          "transform": [
+            72.16,
+            13.91
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 10,
+          "foot_px": [
+            431,
+            590
+          ],
+          "adj_applied": "True",
+          "transform": [
+            38.84,
+            18.39
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 11,
+          "foot_px": [
+            1453,
+            461
+          ],
+          "adj_applied": "True",
+          "transform": [
+            94.68,
+            7.86
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 12,
+          "foot_px": [
+            911,
+            543
+          ],
+          "adj_applied": "True",
+          "transform": [
+            65.06,
+            14.61
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 13,
+          "foot_px": [
+            644,
+            486
+          ],
+          "adj_applied": "True",
+          "transform": [
+            50.5,
+            9.57
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 14,
+          "foot_px": [
+            268,
+            502
+          ],
+          "adj_applied": "True",
+          "transform": [
+            29.97,
+            10.74
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 16,
+          "foot_px": [
+            1003,
+            601
+          ],
+          "adj_applied": "True",
+          "transform": [
+            70.06,
+            19.64
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 17,
+          "foot_px": [
+            835,
+            473
+          ],
+          "adj_applied": "True",
+          "transform": [
+            60.94,
+            8.56
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 18,
+          "foot_px": [
+            593,
+            396
+          ],
+          "adj_applied": "True",
+          "transform": [
+            47.75,
+            1.81
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 19,
+          "foot_px": [
+            477,
+            404
+          ],
+          "adj_applied": "True",
+          "transform": [
+            41.41,
+            2.44
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 20,
+          "foot_px": [
+            1241,
+            530
+          ],
+          "adj_applied": "True",
+          "transform": [
+            83.08,
+            13.67
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 22,
+          "foot_px": [
+            625,
+            523
+          ],
+          "adj_applied": "True",
+          "transform": [
+            49.45,
+            12.74
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 26,
+          "foot_px": [
+            1118,
+            691
+          ],
+          "adj_applied": "True",
+          "transform": [
+            76.31,
+            27.43
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 35,
+          "foot_px": [
+            1742,
+            702
+          ],
+          "adj_applied": "True",
+          "transform": [
+            105.0,
+            28.71
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 40,
+          "foot_px": [
+            1468,
+            613
+          ],
+          "adj_applied": "True",
+          "transform": [
+            95.45,
+            20.92
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 43,
+          "foot_px": [
+            1557,
+            446
+          ],
+          "adj_applied": "True",
+          "transform": [
+            100.36,
+            6.62
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 45,
+          "foot_px": [
+            887,
+            842
+          ],
+          "adj_applied": "True",
+          "transform": [
+            63.65,
+            40.28
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 48,
+          "foot_px": [
+            210,
+            342
+          ],
+          "adj_applied": "True",
+          "transform": [
+            26.86,
+            0.0
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 49,
+          "foot_px": [
+            39,
+            973
+          ],
+          "adj_applied": "True",
+          "transform": [
+            17.31,
+            51.08
+          ],
+          "status": "ok"
+        }
+      ],
+      "ball": null,
+      "auto_length_m": 49.64407730102539,
+      "auto_width_m": 30.0,
+      "fifa_length_m": 105.0,
+      "fifa_width_m": 68.0,
+      "H_cond": 3083.996158289468
+    },
+    {
+      "frame": 749,
+      "camera_cumulative_px": [
+        85.20158386230469,
+        91.43656992912292
+      ],
+      "camera_valid": true,
+      "mapper_found": true,
+      "players": [
+        {
+          "id": 1,
+          "foot_px": [
+            875,
+            677
+          ],
+          "adj_applied": "True",
+          "transform": [
+            43.24,
+            26.33
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 3,
+          "foot_px": [
+            622,
+            730
+          ],
+          "adj_applied": "True",
+          "transform": [
+            29.41,
+            30.75
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 5,
+          "foot_px": [
+            1369,
+            678
+          ],
+          "adj_applied": "True",
+          "transform": [
+            70.21,
+            26.68
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 6,
+          "foot_px": [
+            640,
+            661
+          ],
+          "adj_applied": "True",
+          "transform": [
+            30.42,
+            24.83
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 7,
+          "foot_px": [
+            656,
+            693
+          ],
+          "adj_applied": "True",
+          "transform": [
+            31.28,
+            27.59
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 8,
+          "foot_px": [
+            1214,
+            432
+          ],
+          "adj_applied": "True",
+          "transform": [
+            61.84,
+            5.47
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 9,
+          "foot_px": [
+            1039,
+            567
+          ],
+          "adj_applied": "True",
+          "transform": [
+            52.24,
+            16.97
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 10,
+          "foot_px": [
+            818,
+            685
+          ],
+          "adj_applied": "True",
+          "transform": [
+            40.13,
+            26.99
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 11,
+          "foot_px": [
+            1352,
+            482
+          ],
+          "adj_applied": "True",
+          "transform": [
+            69.35,
+            9.83
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 12,
+          "foot_px": [
+            976,
+            544
+          ],
+          "adj_applied": "True",
+          "transform": [
+            48.8,
+            14.96
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 13,
+          "foot_px": [
+            755,
+            482
+          ],
+          "adj_applied": "True",
+          "transform": [
+            36.76,
+            9.51
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 14,
+          "foot_px": [
+            500,
+            515
+          ],
+          "adj_applied": "True",
+          "transform": [
+            22.83,
+            12.21
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 16,
+          "foot_px": [
+            1193,
+            645
+          ],
+          "adj_applied": "True",
+          "transform": [
+            60.62,
+            23.75
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 17,
+          "foot_px": [
+            847,
+            501
+          ],
+          "adj_applied": "True",
+          "transform": [
+            41.78,
+            11.2
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 18,
+          "foot_px": [
+            551,
+            378
+          ],
+          "adj_applied": "True",
+          "transform": [
+            25.66,
+            0.47
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 19,
+          "foot_px": [
+            515,
+            414
+          ],
+          "adj_applied": "True",
+          "transform": [
+            23.68,
+            3.54
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 20,
+          "foot_px": [
+            1391,
+            528
+          ],
+          "adj_applied": "True",
+          "transform": [
+            71.47,
+            13.81
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 22,
+          "foot_px": [
+            729,
+            570
+          ],
+          "adj_applied": "True",
+          "transform": [
+            35.31,
+            17.06
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 26,
+          "foot_px": [
+            623,
+            804
+          ],
+          "adj_applied": "True",
+          "transform": [
+            29.44,
+            37.1
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 35,
+          "foot_px": [
+            1744,
+            783
+          ],
+          "adj_applied": "True",
+          "transform": [
+            90.65,
+            35.9
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 40,
+          "foot_px": [
+            1308,
+            601
+          ],
+          "adj_applied": "True",
+          "transform": [
+            66.91,
+            20.03
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 43,
+          "foot_px": [
+            1681,
+            442
+          ],
+          "adj_applied": "True",
+          "transform": [
+            87.33,
+            6.58
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 45,
+          "foot_px": [
+            1216,
+            844
+          ],
+          "adj_applied": "True",
+          "transform": [
+            61.8,
+            40.86
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 49,
+          "foot_px": [
+            412,
+            915
+          ],
+          "adj_applied": "True",
+          "transform": [
+            17.89,
+            46.52
+          ],
+          "status": "ok"
+        },
+        {
+          "id": 53,
+          "foot_px": [
+            681,
+            640
+          ],
+          "adj_applied": "True",
+          "transform": [
+            32.67,
+            23.05
+          ],
+          "status": "ok"
+        }
+      ],
+      "ball": {
+        "center_px": [
+          794,
+          681
+        ],
+        "transform": [
+          38.82,
+          26.63
+        ]
+      },
+      "auto_length_m": 49.64407730102539,
+      "auto_width_m": 30.0,
+      "fifa_length_m": 105.0,
+      "fifa_width_m": 68.0,
+      "H_cond": 3083.996158289468
+    }
+  ],
+  "summary": {
+    "total_player_points": 18137,
+    "out_of_bounds": 0,
+    "no_transform": 0,
+    "oob_pct": 0.0,
+    "no_trans_pct": 0.0
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "shots": [
+    {
+      "start_frame": 0,
+      "end_frame": 749,
+      "start_time": 0.0,
+      "end_time": 29.96,
+      "duration_s": 29.96,
+      "shot_type": "wide_tactical",
+      "confidence": 0.715,
+      "transition_in": "continuous",
+      "transition_out": null,
+      "features": {
+        "green_ratio": 0.599,
+        "edge_density": 0.088,
+        "motion_level": 0.12
+      },
+      "validity": {
+        "pitch_calibration": true,
+        "camera_motion": true,
+        "metrics_enabled": true
+      }
+    }
+  ],
+  "total_shots": 1
+}
