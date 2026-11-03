@@ -151,20 +151,16 @@ def extract_events(tracks, holders, fps, direction=None, pitch=None):
                 }
             )
 
+    seen_passes = set()
     for a, b in zip(segments, segments[1:]):
-        travel, metric, _, end_pos, detected_path = _ball_travel(tracks, a["end"], b["start"])
+        travel, metric, start_pos, end_pos, detected_path = _ball_travel(
+            tracks, a["end"], b["start"]
+        )
         min_pass = config.PASS_MIN_BALL_TRAVEL_M if metric else config.PASS_MIN_BALL_TRAVEL_PX
         gap_s = (b["start"] - a["end"]) / fps
         
         # Require actual ball detection in the path
-        if not detected_path:
-            continue
-        
-        # Minimum travel threshold
-        if travel < 1.0:  # At least 1 meter/px
-            continue
-            
-        if gap_s > config.PASS_MAX_GAP_S:
+        if not detected_path or gap_s > config.PASS_MAX_GAP_S:
             continue
 
         payload = {
@@ -179,9 +175,25 @@ def extract_events(tracks, holders, fps, direction=None, pitch=None):
             "gap_s": round(gap_s, 2),
         }
         
-        if a["team"] == b["team"] and a["player_id"] != b["player_id"] and travel >= min_pass:
+        is_pass = (
+            a["key"] == "players"
+            and b["key"] == "players"
+            and a["team"] in (1, 2)
+            and a["team"] == b["team"]
+            and a["player_id"] != b["player_id"]
+            and b["start"] == a["end"] + 1
+            and start_pos is not None
+            and end_pos is not None
+        )
+        pass_key = (b["start"], a["team"], a["player_id"], b["player_id"])
+
+        if is_pass and pass_key not in seen_passes:
+            seen_passes.add(pass_key)
             payload["type"] = "pass"
             payload["team"] = a["team"]
+            payload["team_id"] = int(a["team"])
+            payload["passer_id"] = int(a["player_id"])
+            payload["receiver_id"] = int(b["player_id"])
             from_xy = _player_xy(tracks, a["key"], a["player_id"], a["end"])
             payload["progressive"] = False
             if from_xy and end_pos and direction and a["team"] in direction:
@@ -189,11 +201,14 @@ def extract_events(tracks, holders, fps, direction=None, pitch=None):
                     from_xy[0] - direction[a["team"]]["opp_goal_x"]
                 )
             events.append(payload)
-        elif a["team"] != b["team"] and travel >= min_pass * 0.5:
+        elif a["team"] != b["team"] and travel >= max(1.0, min_pass * 0.5):
             # Only record turnovers with reasonable travel
             payload["type"] = "turnover"
             payload["team"] = b["team"]
             events.append(payload)
+
+        if travel < 1.0:
+            continue
 
         ball_kmh = _max_ball_speed(tracks, a["end"], b["start"])
         kind = _classify_delivery(a, travel, metric, ball_kmh, end_pos, direction, pitch)
