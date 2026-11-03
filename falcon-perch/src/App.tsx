@@ -56,12 +56,14 @@ function Toast({ message }: { message: string }) {
   return message ? <div className="toast" role="status"><span className="pulse-dot" />{message}</div> : null
 }
 
+// ─── Auth Page ────────────────────────────────────────────────────────────────
+
 function AuthPage({
   onAuthenticated,
   onGuest,
   notify,
 }: {
-  onAuthenticated: (user: User, returnPath?: string) => Promise<void>
+  onAuthenticated: (user: User, isNewUser: boolean, returnPath?: string) => Promise<void>
   onGuest: (returnPath?: string) => Promise<void>
   notify: (message: string) => void
 }) {
@@ -77,42 +79,52 @@ function AuthPage({
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
-    const email = String(data.get('email') ?? '').trim()
+    const email = String(data.get('email') ?? '').trim().toLowerCase()
     const password = String(data.get('password') ?? '')
-    const name = String(data.get('name') ?? '').trim()
-    const age = Number(data.get('age') ?? 17)
-    const level = (data.get('level') as SkillLevel) || 'intermediate'
-    const role = String(data.get('role') ?? '').trim()
-    const yearsPlaying = Number(data.get('yearsPlaying') ?? 3)
-    const experience = String(data.get('experience') ?? '').trim()
-    const goal = (data.get('goal') as AthleteGoal) || 'national'
 
     setBusy(true)
     try {
       if (signup) {
+        // ── Signup: collect full profile from form, persist, go to dashboard ──
+        const name = String(data.get('name') ?? '').trim()
+        const age = Number(data.get('age') ?? 17)
+        const level = (data.get('level') as SkillLevel) || 'intermediate'
+        const role = String(data.get('role') ?? '').trim()
+        const yearsPlaying = Number(data.get('yearsPlaying') ?? 3)
+        const experience = String(data.get('experience') ?? '').trim()
+        const goal = (data.get('goal') as AthleteGoal) || 'national'
+        const country = String(data.get('country') ?? '').trim()
+        const state = String(data.get('state') ?? '').trim()
+        const city = String(data.get('city') ?? '').trim()
+
         const user = await authService.signup(email, password)
+        // Override the email-derived name with the typed full name.
         if (name) {
           user.name = name
-          localStorage.setItem('falcon-perch.user', JSON.stringify(user))
+          // Persist the name override so it survives session restore.
+          localStorage.setItem(`falcon-perch.identity.${email}`, JSON.stringify(user))
         }
 
         const newProfile: OnboardingProfile = {
           preferredSport: selectedSport,
           age,
-          country: 'India',
-          state: 'Maharashtra',
-          city: 'Mumbai',
+          country: country || 'India',
+          state: state || '',
+          city: city || '',
           level,
-          role: role || 'Striker / Forward',
+          role: role || 'Player',
           yearsPlaying,
           goal,
-          experience_details: experience,
+          experience_details: experience || undefined,
         }
         await profileService.saveProfile(newProfile)
-        await onAuthenticated(user, returnPath)
+        await onAuthenticated(user, true, returnPath)
       } else {
+        // ── Login: check for existing profile to decide route ──
         const user = await authService.login(email, password)
-        await onAuthenticated(user, returnPath)
+        const existingProfile = await profileService.getProfileForEmail(email)
+        const isNew = !existingProfile
+        await onAuthenticated(user, isNew, returnPath)
       }
     } finally {
       setBusy(false)
@@ -170,13 +182,12 @@ function AuthPage({
           <h2>{signup ? 'Create Your Athlete Profile' : 'Enter the Perch'}</h2>
           <p className="form-intro">
             {signup
-              ? 'Select your sport and details to customize your game-like dashboard.'
+              ? 'Fill in your sport and details to build your personalized dashboard.'
               : 'Test the live experience in 1 click or log into your athlete account.'}
           </p>
 
           {!signup && (
             <>
-              {/* Duolingo-style Big 3D Guest Demo Button */}
               <button
                 className="button-guest-demo"
                 type="button"
@@ -204,19 +215,19 @@ function AuthPage({
             {signup && (
               <>
                 <label>
-                  Full Athlete Name
+                  Full Name
                   <input
                     name="name"
-                    placeholder="e.g. Jhon"
+                    placeholder="e.g. Rahul Sharma"
                     required
                     type="text"
                   />
                 </label>
 
-                {/* Favorite Sport Selector Pills */}
+                {/* Sport Selector */}
                 <div>
                   <div className="text-xs font-bold text-white uppercase tracking-wider mb-2">
-                    Select Your Favorite Sport:
+                    Select Your Sport
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2">
                     {SPORTS.map((sport) => {
@@ -228,16 +239,14 @@ function AuthPage({
                           type="button"
                           onClick={() => setSelectedSport(sport)}
                           className={`flex items-center gap-2 p-2.5 rounded-xl font-black text-xs uppercase tracking-wider transition-all cursor-pointer ${isSelected
-                              ? 'text-slate-950 shadow-lg scale-102 border-2 border-white'
-                              : 'bg-slate-900/80 hover:bg-slate-800 text-white/80 border border-white/10'
-                            }`}
+                            ? 'text-slate-950 shadow-lg scale-102 border-2 border-white'
+                            : 'bg-slate-900/80 hover:bg-slate-800 text-white/80 border border-white/10'
+                          }`}
                           style={{
                             background: isSelected
                               ? `linear-gradient(135deg, ${sTheme.primaryColor}, ${sTheme.accentColor})`
                               : undefined,
-                            boxShadow: isSelected
-                              ? `0 3px 0 ${sTheme.btnShadow}`
-                              : undefined,
+                            boxShadow: isSelected ? `0 3px 0 ${sTheme.btnShadow}` : undefined,
                           }}
                         >
                           <span className="text-base">{sTheme.icon}</span>
@@ -247,21 +256,14 @@ function AuthPage({
                     })}
                   </div>
                   <div className="text-[11px] text-yellow-300 font-medium">
-                    ⚡ Your dashboard will immediately transform with {activeTheme.name} stadiums and pro benchmarks.
+                    ⚡ Your dashboard will transform with {activeTheme.name} stadiums and pro benchmarks.
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <label>
                     Age
-                    <input
-                      max="55"
-                      min="8"
-                      name="age"
-                      defaultValue={17}
-                      required
-                      type="number"
-                    />
+                    <input max="55" min="8" name="age" defaultValue={17} required type="number" />
                   </label>
                   <label>
                     Skill Level
@@ -279,37 +281,44 @@ function AuthPage({
                     Position / Role
                     <input
                       name="role"
-                      placeholder="e.g. Striker / Winger, Top-order Batsman"
-                      defaultValue="Forward"
+                      placeholder="e.g. Striker, Top-order Batsman"
                       required
                       type="text"
                     />
                   </label>
                   <label>
-                    Years Playing Sport
-                    <input
-                      max="40"
-                      min="0"
-                      name="yearsPlaying"
-                      defaultValue={3}
-                      required
-                      type="number"
-                    />
+                    Years Playing
+                    <input max="40" min="0" name="yearsPlaying" defaultValue={3} required type="number" />
+                  </label>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <label>
+                    Country
+                    <input name="country" placeholder="e.g. India" required type="text" />
+                  </label>
+                  <label>
+                    State / Region
+                    <input name="state" placeholder="e.g. Maharashtra" required type="text" />
+                  </label>
+                  <label>
+                    City
+                    <input name="city" placeholder="e.g. Pune" required type="text" />
                   </label>
                 </div>
 
                 <label>
-                  Previous Experience, Past Academies & Achievements
+                  Track Record or Past Experience <span className="text-slate-400 font-normal normal-case">(optional)</span>
                   <textarea
                     name="experience"
                     rows={2}
-                    placeholder="e.g. 3 years school squad, 2 years local academy training, district championship quarter-finalist"
-                    className="w-full p-3 rounded-2xl border-2 border-white/15 bg-slate-900/90 text-white text-xs font-medium outline-none focus:border-yellow-400"
+                    placeholder="e.g. 3 years school squad, local academy training, district championship finalist"
+                    className="w-full p-3 rounded-2xl border-2 border-white/15 bg-slate-900/90 text-white text-xs font-medium outline-none focus:border-yellow-400 resize-none"
                   />
                 </label>
 
                 <label>
-                  Target Goal
+                  Goal
                   <select name="goal" defaultValue="national">
                     <option value="district">District Level Trials</option>
                     <option value="state">State Team Selection</option>
@@ -322,13 +331,7 @@ function AuthPage({
 
             <label>
               Email address
-              <input
-                autoComplete="email"
-                name="email"
-                placeholder="athlete@example.com"
-                required
-                type="email"
-              />
+              <input autoComplete="email" name="email" placeholder="athlete@example.com" required type="email" />
             </label>
             <label>
               Password
@@ -342,13 +345,9 @@ function AuthPage({
               />
             </label>
 
-            <button
-              className="button-primary-3d"
-              disabled={busy}
-              type="submit"
-            >
+            <button className="button-primary-3d" disabled={busy} type="submit">
               {busy
-                ? 'Building Profile…'
+                ? 'Processing…'
                 : signup
                   ? `Launch My ${activeTheme.name} Arena ⚡`
                   : 'Sign In & Enter Dashboard ⚡'}
@@ -362,7 +361,7 @@ function AuthPage({
             </button>
           </p>
           <p className="auth-terms">
-            By continuing, you agree to use Falcon-Perch as an athletic training companion. Demo progress is saved on this browser.
+            By continuing, you agree to use Falcon-Perch as an athletic training companion. Progress is saved on this browser.
           </p>
         </section>
       </div>
@@ -372,10 +371,12 @@ function AuthPage({
   )
 }
 
+// ─── Onboarding Page (4-step wizard, also used as /settings) ─────────────────
+
 const steps = [
-  { title: 'What do you play?', subtitle: 'We’ll make your perch feel like yours.' },
-  { title: 'Where are you based?', subtitle: 'We’ll keep your journey close to home.' },
-  { title: 'Tell us your starting point.', subtitle: 'There’s no wrong place to begin.' },
+  { title: 'What do you play?', subtitle: "We'll make your perch feel like yours." },
+  { title: 'Where are you based?', subtitle: "We'll keep your journey close to home." },
+  { title: 'Tell us your starting point.', subtitle: "There's no wrong place to begin." },
   { title: 'What are you reaching for?', subtitle: 'Set a goal that gives your practice direction.' },
 ]
 
@@ -471,8 +472,7 @@ function OnboardingPage({
                   >
                     {SPORTS.map((sport) => (
                       <option key={sport} value={sport}>
-                        {sport[0]?.toUpperCase()}
-                        {sport.slice(1)}
+                        {sport[0]?.toUpperCase()}{sport.slice(1)}
                       </option>
                     ))}
                   </select>
@@ -533,8 +533,7 @@ function OnboardingPage({
                   >
                     {(['beginner', 'intermediate', 'advanced', 'pro'] as const).map((level) => (
                       <option key={level} value={level}>
-                        {level[0]?.toUpperCase()}
-                        {level.slice(1)}
+                        {level[0]?.toUpperCase()}{level.slice(1)}
                       </option>
                     ))}
                   </select>
@@ -562,11 +561,13 @@ function OnboardingPage({
                   </label>
                 </div>
                 <label>
-                  Previous experience & achievements
-                  <input
+                  Track record or past experience <span className="text-slate-400 font-normal normal-case">(optional)</span>
+                  <textarea
+                    rows={2}
                     onChange={(event) => update('experience_details', event.target.value)}
                     placeholder="e.g. 3 years school squad, local academy, tournament wins"
                     value={profile.experience_details || ''}
+                    className="w-full p-3 rounded-2xl border-2 border-white/15 bg-slate-900/90 text-white text-xs font-medium outline-none focus:border-yellow-400 resize-none"
                   />
                 </label>
               </>
@@ -581,8 +582,7 @@ function OnboardingPage({
                   >
                     {(['district', 'state', 'national', 'international'] as const).map((goal) => (
                       <option key={goal} value={goal}>
-                        {goal[0]?.toUpperCase()}
-                        {goal.slice(1)} level
+                        {goal[0]?.toUpperCase()}{goal.slice(1)} level
                       </option>
                     ))}
                   </select>
@@ -599,11 +599,7 @@ function OnboardingPage({
                   ← Back
                 </button>
               )}
-              <button
-                className="button-primary-3d"
-                disabled={busy}
-                type="submit"
-              >
+              <button className="button-primary-3d" disabled={busy} type="submit">
                 {busy ? 'Saving…' : settings ? 'Save changes' : step === steps.length - 1 ? 'Build my profile ⚡' : 'Continue →'}
               </button>
             </div>
@@ -638,18 +634,24 @@ function ResetAnalysesButton() {
   )
 }
 
+// ─── Guards ───────────────────────────────────────────────────────────────────
+
 function RequireAuth({ user, ready }: { user: User | null; ready: boolean }) {
   const location = useLocation()
   if (!ready) return <LoadingPage />
   return user ? <Outlet /> : <Navigate replace to="/auth" state={{ from: location }} />
 }
 
-function RequireProfile({ profile }: { profile: OnboardingProfile | null }) {
+// Guest users have a profile but skip the onboarding step.
+function RequireProfile({ profile }: { user: User | null; profile: OnboardingProfile | null }) {
   const location = useLocation()
+  // Guests always have a profile injected — skip onboarding.
   if (!profile && location.pathname !== '/onboarding') return <Navigate replace to="/onboarding" />
   if (profile && location.pathname === '/onboarding') return <Navigate replace to="/dashboard" />
   return <Outlet />
 }
+
+// ─── App Shell (authenticated layout) ────────────────────────────────────────
 
 function AppShell({
   user,
@@ -663,7 +665,7 @@ function AppShell({
   const navigate = useNavigate()
   async function signOut() {
     await onLogout()
-    navigate('/')
+    navigate('/auth')
   }
   return (
     <div className="app-shell">
@@ -678,15 +680,23 @@ function AppShell({
         </nav>
         <details className="profile-menu">
           <summary>
+            {/* Guest badge */}
+            {user.isGuest && (
+              <span className="guest-badge">🎮 Guest</span>
+            )}
             <span className="avatar">{user.name[0]?.toUpperCase()}</span>
-            <span className="profile-name">{user.name}</span>
+            <span className="profile-name">{user.isGuest ? 'Guest' : user.name}</span>
             <span className="menu-chevron">⌄</span>
           </summary>
           <div className="profile-dropdown">
-            <span className="dropdown-email">{user.email}</span>
-            <NavLink to="/settings">Athlete profile</NavLink>
+            {user.isGuest ? (
+              <span className="dropdown-email guest-mode-label">🎮 Guest Mode</span>
+            ) : (
+              <span className="dropdown-email">{user.email}</span>
+            )}
+            {!user.isGuest && <NavLink to="/settings">Athlete profile</NavLink>}
             <button onClick={signOut} type="button">
-              Sign out
+              {user.isGuest ? 'Exit Guest Mode' : 'Log out'}
             </button>
           </div>
         </details>
@@ -706,6 +716,8 @@ function AppShell({
     </div>
   )
 }
+
+// ─── Utility Pages ────────────────────────────────────────────────────────────
 
 function LaterPage({ path }: { path: string }) {
   const page = laterRoutes[path] ?? laterRoutes['/idols']
@@ -749,6 +761,8 @@ function Footer() {
   )
 }
 
+// ─── Route Tree ───────────────────────────────────────────────────────────────
+
 function AppRoutes({
   user,
   profile,
@@ -766,14 +780,23 @@ function AppRoutes({
 }) {
   const navigate = useNavigate()
 
-  async function onAuthenticated(nextUser: User, returnPath?: string) {
+  /**
+   * Called after login or signup.
+   * isNewUser = true  → no profile stored yet → go to onboarding (shouldn't
+   *                      happen for signup since we already saved the profile,
+   *                      but handles edge cases for login of brand-new email).
+   * isNewUser = false → profile already saved → go straight to dashboard.
+   */
+  async function onAuthenticated(nextUser: User, _isNewUser: boolean, returnPath?: string) {
     setUser(nextUser)
     const savedProfile = await profileService.getProfile()
     setProfile(savedProfile)
     if (returnPath) {
       navigate(returnPath, { replace: true })
+    } else if (savedProfile) {
+      navigate('/dashboard', { replace: true })
     } else {
-      navigate(savedProfile ? '/dashboard' : '/onboarding', { replace: true })
+      navigate('/onboarding', { replace: true })
     }
   }
 
@@ -796,8 +819,24 @@ function AppRoutes({
     setProfile(null)
   }
 
+  // Fallback profile/user values for TypeScript — RequireAuth/RequireProfile
+  // prevent these routes from rendering when user or profile is actually null.
+  const safeUser = user ?? { id: '', email: '', name: 'Athlete', isGuest: false }
+  const safeProfile = profile ?? {
+    preferredSport: 'football' as Sport,
+    age: 17,
+    country: '',
+    state: '',
+    city: '',
+    level: 'intermediate' as SkillLevel,
+    role: '',
+    yearsPlaying: 0,
+    goal: 'district' as AthleteGoal,
+  }
+
   return (
     <Routes>
+      {/* ── Public ── */}
       <Route
         path="/"
         element={
@@ -826,8 +865,11 @@ function AppRoutes({
           />
         }
       />
+
+      {/* ── Protected ── */}
       <Route element={<RequireAuth ready={ready} user={user} />}>
-        <Route element={<RequireProfile profile={profile} />}>
+        <Route element={<RequireProfile user={user} profile={profile} />}>
+          {/* Onboarding (only reached if no profile yet) */}
           <Route
             path="/onboarding"
             element={
@@ -842,7 +884,7 @@ function AppRoutes({
                     state: '',
                     city: '',
                     level: 'intermediate',
-                    role: 'Forward / Striker',
+                    role: '',
                     yearsPlaying: 3,
                     goal: 'national',
                     experience_details: '',
@@ -852,24 +894,14 @@ function AppRoutes({
               )
             }
           />
+
+          {/* App Shell — all routes that need the persistent header */}
           <Route
             element={
               <AppShell
                 onLogout={logout}
-                profile={
-                  profile ?? {
-                    preferredSport: 'football',
-                    age: 17,
-                    country: '',
-                    state: '',
-                    city: '',
-                    level: 'intermediate',
-                    role: '',
-                    yearsPlaying: 0,
-                    goal: 'district',
-                  }
-                }
-                user={user ?? { id: '', email: '', name: 'Athlete' }}
+                profile={safeProfile}
+                user={safeUser}
               />
             }
           >
@@ -877,27 +909,21 @@ function AppRoutes({
               path="/dashboard"
               element={
                 <DashboardPage
-                  profile={
-                    profile ?? {
-                      preferredSport: 'football',
-                      age: 17,
-                      country: '',
-                      state: '',
-                      city: '',
-                      level: 'intermediate',
-                      role: '',
-                      yearsPlaying: 0,
-                      goal: 'district',
-                    }
-                  }
-                  user={user ?? { id: '', email: '', name: 'Athlete' }}
+                  profile={safeProfile}
+                  user={safeUser}
                   onProfileUpdate={saveProfile}
                 />
               }
             />
             <Route
               path="/settings"
-              element={profile ? <OnboardingPage initial={profile} onSave={saveProfile} settings /> : <Navigate replace to="/onboarding" />}
+              element={
+                profile ? (
+                  <OnboardingPage initial={profile} onSave={saveProfile} settings />
+                ) : (
+                  <Navigate replace to="/onboarding" />
+                )
+              }
             />
             <Route path="/idols" element={<LaterPage path="/idols" />} />
             <Route path="/idols/:id" element={<LaterPage path="/idols" />} />
@@ -912,10 +938,13 @@ function AppRoutes({
           </Route>
         </Route>
       </Route>
+
       <Route path="*" element={<Navigate replace to="/" />} />
     </Routes>
   )
 }
+
+// ─── App Frame (session restore) ──────────────────────────────────────────────
 
 function AppFrame() {
   const [user, setUser] = useState<User | null>(null)
@@ -926,6 +955,7 @@ function AppFrame() {
   useEffect(() => {
     let active = true
     async function restoreSession() {
+      // Session lives in sessionStorage — null on fresh tab open.
       const currentUser = await authService.getCurrentUser()
       const currentProfile = currentUser ? await profileService.getProfile() : null
       if (active) {
@@ -959,6 +989,8 @@ function AppFrame() {
     </>
   )
 }
+
+// ─── Root ─────────────────────────────────────────────────────────────────────
 
 function App() {
   return (

@@ -1,22 +1,20 @@
-import { mockUser } from '../mock/auth'
 import type { OnboardingProfile, User } from '../types'
 
-const USER_KEY = 'falcon-perch.user'
-const PROFILE_KEY = 'falcon-perch.profile'
+// Session lives in sessionStorage — cleared when tab/browser closes.
+const SESSION_KEY = 'falcon-perch.session'
 
-function createUser(email: string): User {
-  const nameFromEmail = email.split('@')[0]?.replace(/[._-]/g, ' ')
-  const name = nameFromEmail
-    ? nameFromEmail.replace(/\b\w/g, (letter) => letter.toUpperCase())
-    : mockUser.name
+// Per-user profile keyed by email so each account has its own data.
+const profileKey = (email: string) => `falcon-perch.profile.${email}`
 
-  return { id: crypto.randomUUID(), email, name }
-}
+// Special guest key (never collides with a real email-based key).
+const GUEST_SESSION_KEY = 'falcon-perch.session'
+const GUEST_EMAIL = 'guest@falconperch.internal'
 
 export const DEMO_GUEST_USER: User = {
   id: 'guest-athlete-demo',
-  email: 'demo@falconperch.com',
-  name: 'Alex Rivera (Guest)',
+  email: GUEST_EMAIL,
+  name: 'Alex Rivera',
+  isGuest: true,
 }
 
 export const DEMO_GUEST_PROFILE: OnboardingProfile = {
@@ -32,29 +30,71 @@ export const DEMO_GUEST_PROFILE: OnboardingProfile = {
   experience_details: '4 years youth academy training · School squad captain',
 }
 
+function createUser(email: string): User {
+  const raw = email.split('@')[0]?.replace(/[._-]/g, ' ') ?? ''
+  const name = raw.replace(/\b\w/g, (l) => l.toUpperCase()) || 'Athlete'
+  return { id: crypto.randomUUID(), email, name, isGuest: false }
+}
+
+/** Returns the profile key for the currently-stored session user (if any). */
+function currentProfileKey(): string | null {
+  const stored = sessionStorage.getItem(SESSION_KEY)
+  if (!stored) return null
+  try {
+    const user = JSON.parse(stored) as User
+    return profileKey(user.email)
+  } catch {
+    return null
+  }
+}
+
+// ── Auth actions ─────────────────────────────────────────────────────────────
+
 export async function login(email: string, _password: string): Promise<User> {
-  const user = createUser(email)
-  localStorage.setItem(USER_KEY, JSON.stringify(user))
+  const lower = email.toLowerCase()
+  const existing = localStorage.getItem(profileKey(lower))
+  // If this email has a stored profile, restore the same user id so data matches.
+  let user: User
+  if (existing) {
+    // Re-use stored identity if it was previously persisted under this email.
+    const storedUser = localStorage.getItem(`falcon-perch.identity.${lower}`)
+    user = storedUser ? (JSON.parse(storedUser) as User) : createUser(lower)
+  } else {
+    user = createUser(lower)
+  }
+  user.isGuest = false
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify(user))
+  // Persist identity for future logins.
+  localStorage.setItem(`falcon-perch.identity.${lower}`, JSON.stringify(user))
   return user
 }
 
 export async function signup(email: string, _password: string): Promise<User> {
-  const user = createUser(email)
-  localStorage.setItem(USER_KEY, JSON.stringify(user))
+  const lower = email.toLowerCase()
+  const user = createUser(lower)
+  user.isGuest = false
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify(user))
+  localStorage.setItem(`falcon-perch.identity.${lower}`, JSON.stringify(user))
   return user
 }
 
 export async function loginAsGuest(): Promise<{ user: User; profile: OnboardingProfile }> {
-  localStorage.setItem(USER_KEY, JSON.stringify(DEMO_GUEST_USER))
-  localStorage.setItem(PROFILE_KEY, JSON.stringify(DEMO_GUEST_PROFILE))
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify(DEMO_GUEST_USER))
+  // Guest profile is always the demo profile — never stored under a real email key.
+  localStorage.setItem(profileKey(GUEST_EMAIL), JSON.stringify(DEMO_GUEST_PROFILE))
   return { user: DEMO_GUEST_USER, profile: DEMO_GUEST_PROFILE }
 }
 
 export async function getCurrentUser(): Promise<User | null> {
-  const stored = localStorage.getItem(USER_KEY)
+  const stored = sessionStorage.getItem(SESSION_KEY)
   return stored ? (JSON.parse(stored) as User) : null
 }
 
+/** Returns the per-user localStorage profile key for whoever is logged in. */
+export function getActiveProfileKey(): string | null {
+  return currentProfileKey()
+}
+
 export async function logout(): Promise<void> {
-  localStorage.removeItem(USER_KEY)
+  sessionStorage.removeItem(GUEST_SESSION_KEY)
 }

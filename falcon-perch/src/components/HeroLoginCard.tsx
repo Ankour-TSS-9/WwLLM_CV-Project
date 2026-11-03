@@ -1,8 +1,10 @@
 import { useState, type FormEvent } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import type { SportThemeConfig } from '../theme/sportThemes'
 import { TrophyBadge } from '../theme/SportVisuals'
 import * as authService from '../services/authService'
+import * as profileService from '../services/profileService'
 import type { User, OnboardingProfile } from '../types'
 
 interface HeroLoginCardProps {
@@ -12,11 +14,11 @@ interface HeroLoginCardProps {
 }
 
 export function HeroLoginCard({ theme, onSuccess, onPreviewPro }: HeroLoginCardProps) {
-  const [signup, setSignup] = useState(false)
   const [busy, setBusy] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errorMsg, setErrorMsg] = useState('')
+  const navigate = useNavigate()
 
   async function handleGuest() {
     setBusy(true)
@@ -25,35 +27,30 @@ export function HeroLoginCard({ theme, onSuccess, onPreviewPro }: HeroLoginCardP
       const res = await authService.loginAsGuest()
       await onSuccess(res.user, res.profile)
     } catch {
-      setErrorMsg('Failed to initialize demo guest session.')
+      setErrorMsg('Failed to start guest session.')
     } finally {
       setBusy(false)
     }
   }
 
-  async function handleSubmit(e: FormEvent) {
+  async function handleLogin(e: FormEvent) {
     e.preventDefault()
     if (!email || !password) return
     setBusy(true)
     setErrorMsg('')
     try {
-      const user = signup
-        ? await authService.signup(email, password)
-        : await authService.login(email, password)
-
-      // Use saved or demo profile
-      const defaultProfile: OnboardingProfile = {
-        preferredSport: theme.id,
-        age: 17,
-        country: 'India',
-        state: 'Maharashtra',
-        city: 'Mumbai',
-        level: 'intermediate',
-        role: 'Forward / Winger',
-        yearsPlaying: 3,
-        goal: 'national',
+      const lower = email.toLowerCase()
+      const user = await authService.login(lower, password)
+      // Check if this user already has a saved profile.
+      const existingProfile = await profileService.getProfileForEmail(lower)
+      if (existingProfile) {
+        // Returning user — hand them off to the parent so it sets state and navigates.
+        await onSuccess(user, existingProfile)
+      } else {
+        // New email via landing card — send them to the full auth/signup page
+        // so they get proper onboarding.
+        navigate('/auth')
       }
-      await onSuccess(user, defaultProfile)
     } catch {
       setErrorMsg('Sign-in failed. Please try again or continue as guest.')
     } finally {
@@ -74,7 +71,7 @@ export function HeroLoginCard({ theme, onSuccess, onPreviewPro }: HeroLoginCardP
         boxShadow: `0 20px 60px -15px ${theme.glowColor}, 0 0 35px 2px ${theme.borderColor}`,
       }}
     >
-      {/* Top Header */}
+      {/* Header */}
       <div className="flex items-center justify-between gap-3 mb-6 pb-4 border-b border-white/10">
         <div className="flex items-center gap-3">
           <TrophyBadge size={34} color={theme.accentColor} className="drop-shadow-lg" />
@@ -98,7 +95,7 @@ export function HeroLoginCard({ theme, onSuccess, onPreviewPro }: HeroLoginCardP
       </div>
 
       <p className="text-xs sm:text-sm text-slate-300 font-medium mb-5 leading-relaxed">
-        Log in in the beginning to calibrate your sport, level, and generate your personal head-to-head scorecard against world champions.
+        Log in to calibrate your sport, level, and generate your personal head-to-head scorecard against world champions.
       </p>
 
       {errorMsg && (
@@ -107,21 +104,19 @@ export function HeroLoginCard({ theme, onSuccess, onPreviewPro }: HeroLoginCardP
         </div>
       )}
 
-      {/* 1-Click Instant Guest Demo Button */}
+      {/* Guest Button */}
       <button
         type="button"
         disabled={busy}
         onClick={handleGuest}
         className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 hover:from-emerald-400 hover:to-teal-400 text-white font-black text-xs sm:text-sm uppercase tracking-wider shadow-xl border-2 border-white/30 flex items-center justify-center gap-3 transition-transform active:translate-y-1 cursor-pointer mb-5"
-        style={{
-          boxShadow: '0 5px 0 #064e3b, 0 0 25px rgba(16, 185, 129, 0.45)',
-        }}
+        style={{ boxShadow: '0 5px 0 #064e3b, 0 0 25px rgba(16, 185, 129, 0.45)' }}
       >
         <span className="text-xl">🎮</span>
         <div className="text-left">
           <div className="leading-tight">CONTINUE AS GUEST (1-CLICK DEMO)</div>
           <div className="text-[10px] font-medium text-emerald-100 normal-case">
-            Instant Demo Athlete · Age 17 · Unlocks Scorecard Immediately
+            Instant Demo Athlete · No sign-up needed
           </div>
         </div>
       </button>
@@ -132,49 +127,43 @@ export function HeroLoginCard({ theme, onSuccess, onPreviewPro }: HeroLoginCardP
         <div className="h-px flex-1 bg-white/15" />
       </div>
 
-      {/* Email form */}
-      <form onSubmit={handleSubmit} className="space-y-3.5">
-        <div>
-          <input
-            type="email"
-            placeholder="Athlete Email (e.g. you@example.com)"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full h-11 px-4 rounded-xl border border-white/15 bg-slate-900/90 text-white text-xs font-medium placeholder-slate-500 outline-none focus:border-yellow-400 transition-colors"
-          />
-        </div>
-        <div>
-          <input
-            type="password"
-            placeholder="Password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full h-11 px-4 rounded-xl border border-white/15 bg-slate-900/90 text-white text-xs font-medium placeholder-slate-500 outline-none focus:border-yellow-400 transition-colors"
-          />
-        </div>
+      {/* Login form (returning users only) */}
+      <form onSubmit={handleLogin} className="space-y-3.5">
+        <input
+          type="email"
+          placeholder="Athlete Email (e.g. you@example.com)"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="w-full h-11 px-4 rounded-xl border border-white/15 bg-slate-900/90 text-white text-xs font-medium placeholder-slate-500 outline-none focus:border-yellow-400 transition-colors"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          required
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="w-full h-11 px-4 rounded-xl border border-white/15 bg-slate-900/90 text-white text-xs font-medium placeholder-slate-500 outline-none focus:border-yellow-400 transition-colors"
+        />
 
         <button
           type="submit"
           disabled={busy}
           className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-400 hover:from-yellow-300 hover:to-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider shadow-lg border-2 border-white/40 transition-transform active:translate-y-1 cursor-pointer flex items-center justify-center gap-2"
-          style={{
-            boxShadow: '0 4px 0 #b45309, 0 0 20px rgba(251, 191, 36, 0.4)',
-          }}
+          style={{ boxShadow: '0 4px 0 #b45309, 0 0 20px rgba(251, 191, 36, 0.4)' }}
         >
-          {busy ? 'Processing…' : signup ? 'Create Account & Unlock Scorecard ⚡' : 'Sign In & Unlock Scorecard ⚡'}
+          {busy ? 'Processing…' : 'Sign In & Unlock Scorecard ⚡'}
         </button>
       </form>
 
-      {/* Switcher & Preview Link */}
+      {/* Footer links */}
       <div className="mt-5 pt-4 border-t border-white/10 flex items-center justify-between text-[11px] text-slate-400 font-semibold">
         <button
           type="button"
-          onClick={() => setSignup(!signup)}
+          onClick={() => navigate('/auth')}
           className="text-yellow-400 hover:underline cursor-pointer"
         >
-          {signup ? 'Already have an account? Sign in' : 'Need an account? Sign up'}
+          New here? Create an account →
         </button>
 
         <button
@@ -189,4 +178,3 @@ export function HeroLoginCard({ theme, onSuccess, onPreviewPro }: HeroLoginCardP
     </motion.div>
   )
 }
-

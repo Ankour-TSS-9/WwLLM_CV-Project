@@ -5,9 +5,10 @@ import type { User } from '../types'
 interface NavbarProps {
   user?: User | null
   onGuestLogin?: () => Promise<void>
+  onLogout?: () => Promise<void>
 }
 
-export function Navbar({ user, onGuestLogin }: NavbarProps) {
+export function Navbar({ user, onGuestLogin, onLogout }: NavbarProps) {
   const navigate = useNavigate()
 
   async function handleGuest() {
@@ -17,6 +18,15 @@ export function Navbar({ user, onGuestLogin }: NavbarProps) {
       await authService.loginAsGuest()
       navigate('/dashboard')
     }
+  }
+
+  async function handleLogout() {
+    if (onLogout) {
+      await onLogout()
+    } else {
+      await authService.logout()
+    }
+    navigate('/auth')
   }
 
   return (
@@ -90,26 +100,41 @@ export function Navbar({ user, onGuestLogin }: NavbarProps) {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-3">
-          {/* Continue as Guest Button (Instant Demo) */}
-          <button
-            type="button"
-            onClick={handleGuest}
-            className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs uppercase tracking-wider transition-transform active:translate-y-1 shadow-md cursor-pointer"
-            style={{ boxShadow: '0 4px 0 #064e3b' }}
-          >
-            <span>🎮</span> Guest Demo
-          </button>
-
           {user ? (
-            <Link
-              to="/dashboard"
-              className="px-5 py-2.5 rounded-2xl bg-yellow-400 hover:bg-yellow-300 text-slate-950 font-black text-xs uppercase tracking-wider transition-transform active:translate-y-1 shadow-md"
-              style={{ boxShadow: '0 4px 0 #b45309' }}
-            >
-              Dashboard ↗
-            </Link>
+            // Logged-in state: show name/guest badge + logout
+            <div className="flex items-center gap-2">
+              {user.isGuest && (
+                <span className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-black text-[10px] uppercase tracking-wider">
+                  🎮 Guest Mode
+                </span>
+              )}
+              <Link
+                to="/dashboard"
+                className="px-5 py-2.5 rounded-2xl bg-yellow-400 hover:bg-yellow-300 text-slate-950 font-black text-xs uppercase tracking-wider transition-transform active:translate-y-1 shadow-md"
+                style={{ boxShadow: '0 4px 0 #b45309' }}
+              >
+                Dashboard ↗
+              </Link>
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="px-4 py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-black text-xs uppercase tracking-wider border border-white/20 transition-colors cursor-pointer"
+              >
+                {user.isGuest ? 'Exit' : 'Log out'}
+              </button>
+            </div>
           ) : (
+            // Logged-out state: guest demo + sign-in + get started
             <>
+              <button
+                type="button"
+                onClick={handleGuest}
+                className="hidden sm:inline-flex items-center gap-1.5 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-xs uppercase tracking-wider transition-transform active:translate-y-1 shadow-md cursor-pointer"
+                style={{ boxShadow: '0 4px 0 #064e3b' }}
+              >
+                <span>🎮</span> Guest Demo
+              </button>
+
               <Link
                 to="/auth"
                 className="text-xs font-bold text-slate-200 hover:text-yellow-300 px-3 py-2 transition-colors uppercase tracking-wider"
@@ -119,9 +144,7 @@ export function Navbar({ user, onGuestLogin }: NavbarProps) {
               <Link
                 to="/auth"
                 className="px-5 py-2.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-400 hover:from-yellow-300 hover:to-amber-300 text-slate-950 font-black text-xs uppercase tracking-wider transition-transform active:translate-y-1 shadow-lg"
-                style={{
-                  boxShadow: '0 4px 0 #b45309, 0 0 20px rgba(251, 191, 36, 0.4)',
-                }}
+                style={{ boxShadow: '0 4px 0 #b45309, 0 0 20px rgba(251, 191, 36, 0.4)' }}
               >
                 Get Started ⚡
               </Link>

@@ -764,3 +764,30 @@ a {
     grid-template-columns: 1fr;
   }
 }
+
+/* ── Guest mode badge (AppShell profile menu) ─────────────────────────────── */
+.guest-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  background: linear-gradient(135deg, #10b981, #0d9488);
+  color: #0f172a;
+  font-size: 10px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  box-shadow: 0 2px 0 #064e3b;
+  white-space: nowrap;
+}
+
+.guest-mode-label {
+  display: block;
+  padding: 8px 14px 4px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #10b981;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}

@@ -17,6 +17,7 @@ export interface User {
   id: string
   email: string
   name: string
+  isGuest?: boolean
 }
 
 export interface OnboardingProfile {
