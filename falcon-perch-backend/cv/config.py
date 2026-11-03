@@ -29,6 +29,15 @@ BALL_MIN_HEIGHT_PX = 3           # Minimum ball height
 BALL_MAX_HEIGHT_PX = 25          # Maximum ball height
 BALL_MIN_ASPECT_RATIO = 0.5      # Minimum width/height ratio
 BALL_MAX_ASPECT_RATIO = 1.5      # Maximum width/height ratio
+USE_TEMPORAL_BALL_TRACKING = True
+BALL_CANDIDATE_CONF = 0.06       # Low-confidence candidates require trajectory support
+BALL_SMALL_MIN_WIDTH_PX = 2.0
+BALL_SMALL_MIN_HEIGHT_PX = 2.0
+BALL_ASSOCIATION_MIN_GATE_PX = 60.0
+BALL_ASSOCIATION_MAX_GATE_PX = 250.0
+BALL_REINITIALIZE_AFTER_FRAMES = 2
+BALL_REFERENCE_FRAME_WIDTH = 1920
+BALL_REFERENCE_FRAME_HEIGHT = 1080
 
 # Temporal tracking
 BALL_MEASUREMENT_NOISE = 3.0     # Detection position uncertainty (pixels)

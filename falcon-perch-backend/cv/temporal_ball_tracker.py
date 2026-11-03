@@ -19,6 +19,14 @@ from cv import config
 from utils import measure_distance
 
 
+def _frame_scale(frame_shape: Optional[Tuple[int, int]]) -> float:
+    if frame_shape is None:
+        return 1.0
+    frame_height, frame_width = frame_shape[:2]
+    reference_area = config.BALL_REFERENCE_FRAME_WIDTH * config.BALL_REFERENCE_FRAME_HEIGHT
+    return float(np.sqrt((frame_width * frame_height) / reference_area))
+
+
 class BallState(Enum):
     """Explicit ball tracking states."""
     DETECTED = "detected"           # High-confidence real detection
@@ -40,12 +48,20 @@ class BallCandidate:
         self.aspect_ratio = self.width / self.height if self.height > 0 else 0
         self.area = self.width * self.height
     
-    def is_valid(self) -> bool:
+    def is_valid(
+        self,
+        min_confidence: Optional[float] = None,
+        frame_shape: Optional[Tuple[int, int]] = None,
+    ) -> bool:
         """Validate candidate using bounding-box properties."""
-        # Size constraints (from audit: 5-17px width, 5-19px height)
-        if not (config.BALL_MIN_WIDTH_PX <= self.width <= config.BALL_MAX_WIDTH_PX):
+        scale = _frame_scale(frame_shape)
+        min_width = max(1.0, config.BALL_SMALL_MIN_WIDTH_PX * scale)
+        min_height = max(1.0, config.BALL_SMALL_MIN_HEIGHT_PX * scale)
+        max_width = max(min_width, config.BALL_MAX_WIDTH_PX * scale)
+        max_height = max(min_height, config.BALL_MAX_HEIGHT_PX * scale)
+        if not (min_width <= self.width <= max_width):
             return False
-        if not (config.BALL_MIN_HEIGHT_PX <= self.height <= config.BALL_MAX_HEIGHT_PX):
+        if not (min_height <= self.height <= max_height):
             return False
         
         # Aspect ratio (from audit: 0.67-1.14, mean 0.87)
@@ -53,7 +69,8 @@ class BallCandidate:
             return False
         
         # Confidence floor
-        if self.confidence < config.BALL_CONF:
+        confidence_floor = config.BALL_CONF if min_confidence is None else min_confidence
+        if self.confidence < confidence_floor:
             return False
         
         return True
@@ -64,16 +81,21 @@ class BallTrajectory:
     
     def __init__(self, max_history: int = 5):
         self.history = deque(maxlen=max_history)  # Recent (frame, center, state) tuples
+        self.detections = deque(maxlen=max_history)
         self.velocity = np.array([0.0, 0.0])      # Estimated velocity (px/frame)
         self.last_detected_frame = None
         self.last_detected_center = None
+        self.last_detected_bbox = None
         self.frames_since_detection = 0
     
-    def add_detection(self, frame_num: int, center: np.ndarray):
+    def add_detection(self, frame_num: int, center: np.ndarray, bbox=None):
         """Add a real detection to trajectory history."""
-        self.history.append((frame_num, center, BallState.DETECTED))
+        observation = (frame_num, center, BallState.DETECTED)
+        self.history.append(observation)
+        self.detections.append(observation)
         self.last_detected_frame = frame_num
         self.last_detected_center = center
+        self.last_detected_bbox = list(bbox) if bbox is not None else self.last_detected_bbox
         self.frames_since_detection = 0
         self._update_velocity()
     
@@ -85,7 +107,7 @@ class BallTrajectory:
     def _update_velocity(self):
         """Estimate velocity from recent detections."""
         # Use only real detections for velocity estimation
-        detections = [(f, c) for f, c, s in self.history if s == BallState.DETECTED]
+        detections = [(frame, center) for frame, center, _state in self.detections]
         
         if len(detections) < 2:
             # Not enough data, use zero velocity
@@ -94,22 +116,18 @@ class BallTrajectory:
         
         # Weighted velocity estimation (more recent = higher weight)
         velocities = []
-        weights = []
-        
-        for i in range(len(detections) - 1):
+        for i in range(max(0, len(detections) - 4), len(detections) - 1):
             frame1, center1 = detections[i]
             frame2, center2 = detections[i + 1]
             
             dt = frame2 - frame1
             if dt > 0:
                 v = (center2 - center1) / dt
-                velocities.append(v)
-                weights.append(1.0 / dt)  # Recent pairs get higher weight
+                if np.linalg.norm(v) <= config.BALL_MAX_STEP_PX:
+                    velocities.append(v)
         
         if velocities:
-            weights = np.array(weights)
-            weights /= weights.sum()
-            self.velocity = sum(w * v for w, v in zip(weights, velocities))
+            self.velocity = np.median(np.asarray(velocities), axis=0)
         else:
             self.velocity = np.array([0.0, 0.0])
     
@@ -166,7 +184,8 @@ class TemporalBallTracker:
         self, 
         candidates: List[BallCandidate], 
         frame_num: int,
-        is_camera_cut: bool = False
+        is_camera_cut: bool = False,
+        frame_shape: Optional[Tuple[int, int]] = None,
     ) -> Tuple[Optional[BallCandidate], BallState]:
         """
         Process one frame's detections.
@@ -179,32 +198,61 @@ class TemporalBallTracker:
             self.reset()
         
         # Filter to valid candidates
-        valid_candidates = [c for c in candidates if c.is_valid()]
+        valid_candidates = [
+            c for c in candidates
+            if c.is_valid(config.BALL_CANDIDATE_CONF, frame_shape)
+        ]
         
         # No valid candidates
         if not valid_candidates:
             return self._handle_missing_detection(frame_num)
         
         # Initialize or reinitialize if needed
-        if not self.is_initialized or self.trajectory.is_stale(frame_num):
-            return self._initialize_with_best_candidate(valid_candidates, frame_num)
+        if not self.is_initialized:
+            primary_candidates = [
+                c for c in valid_candidates
+                if c.confidence >= config.BALL_CONF
+                and c.is_valid(config.BALL_CONF, frame_shape)
+            ]
+            return self._initialize_with_best_candidate(
+                primary_candidates, frame_num, frame_shape
+            )
+        if self.trajectory.is_stale(frame_num):
+            self.reset()
+            primary_candidates = [
+                c for c in valid_candidates
+                if c.confidence >= config.BALL_CONF
+                and c.is_valid(config.BALL_CONF, frame_shape)
+            ]
+            return self._initialize_with_best_candidate(
+                primary_candidates, frame_num, frame_shape
+            )
         
         # Associate candidate with trajectory
-        return self._associate_candidate(valid_candidates, frame_num)
+        return self._associate_candidate(valid_candidates, frame_num, frame_shape)
     
     def _initialize_with_best_candidate(
         self, 
         candidates: List[BallCandidate], 
-        frame_num: int
+        frame_num: int,
+        frame_shape: Optional[Tuple[int, int]] = None,
     ) -> Tuple[Optional[BallCandidate], BallState]:
         """Initialize tracker with the most confident candidate."""
         if not candidates:
             return None, BallState.MISSING
         
         # Select highest confidence candidate
-        best = max(candidates, key=lambda c: c.confidence)
+        primary_candidates = [
+            c for c in candidates
+            if c.confidence >= config.BALL_CONF
+            and c.width >= max(1.0, config.BALL_MIN_WIDTH_PX * _frame_scale(frame_shape))
+            and c.height >= max(1.0, config.BALL_MIN_HEIGHT_PX * _frame_scale(frame_shape))
+        ]
+        if not primary_candidates:
+            return None, BallState.MISSING
+        best = max(primary_candidates, key=lambda c: c.confidence)
         
-        self.trajectory.add_detection(frame_num, best.center)
+        self.trajectory.add_detection(frame_num, best.center, best.bbox)
         self.is_initialized = True
         
         return best, BallState.DETECTED
@@ -212,7 +260,8 @@ class TemporalBallTracker:
     def _associate_candidate(
         self, 
         candidates: List[BallCandidate], 
-        frame_num: int
+        frame_num: int,
+        frame_shape: Optional[Tuple[int, int]] = None,
     ) -> Tuple[Optional[BallCandidate], BallState]:
         """
         Associate candidates with trajectory prediction.
@@ -222,7 +271,7 @@ class TemporalBallTracker:
         # Predict where ball should be
         predicted_center = self.trajectory.predict_position(frame_num)
         if predicted_center is None:
-            return self._initialize_with_best_candidate(candidates, frame_num)
+            return self._initialize_with_best_candidate(candidates, frame_num, frame_shape)
         
         # Get current uncertainty
         uncertainty = self.trajectory.get_uncertainty()
@@ -234,15 +283,17 @@ class TemporalBallTracker:
         # Acceleration bonus: allow for sudden changes (kicks)
         dt = frame_num - self.trajectory.history[-1][0]
         
-        base_gate = 5.0 * uncertainty  # More permissive base
-        expected_travel = speed * dt
-        acceleration_margin = 2.0 * expected_travel  # Allow 200% acceleration (kicks)
-        
-        # Minimum gate to handle sudden kicks: allow up to 200px jump
-        # This handles rapid movements like passes and shots
-        min_gate = 200.0
-        
-        gate_threshold = max(min_gate, base_gate + expected_travel + acceleration_margin)
+        expected_travel = speed * max(1, dt)
+        scale = _frame_scale(frame_shape)
+        min_gate = max(20.0, config.BALL_ASSOCIATION_MIN_GATE_PX * scale)
+        max_gate = max(min_gate, config.BALL_ASSOCIATION_MAX_GATE_PX * scale)
+        gate_threshold = min(
+            max_gate,
+            max(
+                min_gate,
+                2.0 * expected_travel + 2.0 * uncertainty,
+            ),
+        )
         
         # Evaluate all candidates
         scored_candidates = []
@@ -256,16 +307,23 @@ class TemporalBallTracker:
             # Score combines confidence and distance
             # Closer candidates and higher confidence are preferred
             normalized_distance = distance / (gate_threshold + 1e-6)
-            score = candidate.confidence * (1.0 - 0.5 * normalized_distance)
+            score = candidate.confidence * (1.0 - 0.7 * normalized_distance)
             
             scored_candidates.append((score, distance, candidate))
         
         # No candidates within gate
         if not scored_candidates:
             # Check if we should reinitialize (trajectory may be wrong)
-            if self.trajectory.frames_since_detection > 5:
+            if self.trajectory.frames_since_detection >= config.BALL_REINITIALIZE_AFTER_FRAMES:
                 # Lost track - reinitialize with best candidate
-                return self._initialize_with_best_candidate(candidates, frame_num)
+                primary_candidates = [
+                    c for c in candidates
+                    if c.confidence >= config.BALL_CONF
+                    and c.is_valid(config.BALL_CONF, frame_shape)
+                ]
+                return self._initialize_with_best_candidate(
+                    primary_candidates, frame_num, frame_shape
+                )
             else:
                 # Continue predicting
                 return self._handle_missing_detection(frame_num)
@@ -274,7 +332,7 @@ class TemporalBallTracker:
         best_score, best_distance, best_candidate = max(scored_candidates, key=lambda x: x[0])
         
         # Add to trajectory
-        self.trajectory.add_detection(frame_num, best_candidate.center)
+        self.trajectory.add_detection(frame_num, best_candidate.center, best_candidate.bbox)
         
         return best_candidate, BallState.DETECTED
     

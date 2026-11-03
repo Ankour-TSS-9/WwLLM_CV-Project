@@ -9,6 +9,7 @@ sys.path.append("../")
 from utils import get_center_of_bbox, get_foot_position, measure_distance
 
 from cv import config
+from cv.temporal_ball_tracker import BallCandidate, BallState, TemporalBallTracker
 
 
 class ImprovedTracker:
@@ -21,6 +22,7 @@ class ImprovedTracker:
 
         self.model = YOLO(model_path)
         self._imgsz_override = config.INFERENCE_IMGSZ  # F2: default from config
+        self.ball_temporal_tracker = TemporalBallTracker()
 
         # F4: ByteTrack buffer from config flag
         _track_buf = config.BYTETRACK_BUFFER if config.USE_F4_BUFFER else 30
@@ -57,8 +59,12 @@ class ImprovedTracker:
         for frame_ball in ball_positions:
             info = frame_ball.get(1, {})
             bbox = info.get("bbox")
-            # Frame has real detection if it has a bbox (from _assign_ball)
-            has_bbox = bbox is not None and len(bbox) == 4
+            has_bbox = (
+                bbox is not None
+                and len(bbox) == 4
+                and info.get("detected", info.get("state") != BallState.PREDICTED.value)
+                and not info.get("interpolated", False)
+            )
             detected.append(has_bbox)
             
             if has_bbox:
@@ -88,21 +94,23 @@ class ImprovedTracker:
         # Build output with correct flags
         out = []
         for i, row in df.iterrows():
+            existing = ball_positions[i].get(1, {})
+            if existing.get("state") == BallState.PREDICTED.value:
+                out.append({1: existing})
+                continue
             if row.isna().any():
                 # No bbox (not detected, not interpolated)
                 out.append({})
             else:
                 # Has bbox: either originally detected or newly interpolated
                 originally_detected = detected[i] if i < len(detected) else False
-                out.append(
-                    {
-                        1: {
-                            "bbox": row.tolist(),
-                            "detected": originally_detected,
-                            "interpolated": not originally_detected,
-                        }
-                    }
-                )
+                payload = dict(existing)
+                payload["bbox"] = row.tolist()
+                payload["detected"] = originally_detected
+                payload["interpolated"] = not originally_detected
+                if not originally_detected and config.USE_TEMPORAL_BALL_TRACKING:
+                    payload["state"] = BallState.INTERPOLATED.value
+                out.append({1: payload})
         return out
     
     def second_pass_ball_detection(self, frames, ball_positions):
@@ -203,7 +211,11 @@ class ImprovedTracker:
         for i in range(0, len(frames), batch_size):
             detections_batch = self.model.predict(
                 frames[i : i + batch_size],
-                conf=config.BALL_CONF,
+                conf=(
+                    config.BALL_CANDIDATE_CONF
+                    if config.USE_TEMPORAL_BALL_TRACKING
+                    else config.BALL_CONF
+                ),
                 imgsz=imgsz,
                 verbose=False,
             )
@@ -215,7 +227,9 @@ class ImprovedTracker:
         return names, inv
 
     def _conf_floor(self, class_name):
-        if class_name == "ball":
+        if class_name in ("ball", "football"):
+            if config.USE_TEMPORAL_BALL_TRACKING:
+                return config.BALL_CANDIDATE_CONF
             return config.BALL_CONF
         if class_name == "goalkeeper":
             return config.GOALKEEPER_CONF
@@ -239,6 +253,7 @@ class ImprovedTracker:
         }
 
         prev_ball_center = None
+        self.ball_temporal_tracker.reset()
 
         for frame_num, detection in enumerate(detections):
             cls_names, cls_inv = self._class_lookup(detection.names)
@@ -249,7 +264,7 @@ class ImprovedTracker:
             tracks["referees"].append({})
             tracks["ball"].append({})
 
-            if len(detection_supervision) == 0:
+            if len(detection_supervision) == 0 and not config.USE_TEMPORAL_BALL_TRACKING:
                 prev_ball_center = None
                 continue
 
@@ -290,11 +305,20 @@ class ImprovedTracker:
                 elif name == "referee":
                     tracks["referees"][frame_num][int(track_id)] = payload
 
-            self._assign_ball(filtered, cls_names, cls_inv, tracks, frame_num, prev_ball_center)
+            self._assign_ball(
+                filtered,
+                cls_names,
+                cls_inv,
+                tracks,
+                frame_num,
+                prev_ball_center,
+                self.ball_temporal_tracker,
+                frames[frame_num].shape,
+            )
             ball_info = tracks["ball"][frame_num].get(1)
-            if ball_info and ball_info.get("bbox"):
+            if ball_info and ball_info.get("bbox") and ball_info.get("detected"):
                 prev_ball_center = get_center_of_bbox(ball_info["bbox"])
-            else:
+            elif not config.USE_TEMPORAL_BALL_TRACKING:
                 prev_ball_center = None
 
         if stub_path is not None:
@@ -304,9 +328,65 @@ class ImprovedTracker:
 
         return tracks
 
-    def _assign_ball(self, detections, cls_names, cls_inv, tracks, frame_num, prev_center):
+    def _assign_ball(
+        self,
+        detections,
+        cls_names,
+        cls_inv,
+        tracks,
+        frame_num,
+        prev_center,
+        temporal_tracker=None,
+        frame_shape=None,
+    ):
         # Model may use "ball" or "football" as class name
         ball_id = cls_inv.get("ball") or cls_inv.get("football")
+        if config.USE_TEMPORAL_BALL_TRACKING and temporal_tracker is not None:
+            candidates = []
+            if ball_id is not None:
+                for detection in detections:
+                    bbox = detection[0].tolist()
+                    conf = detection[2]
+                    class_id = detection[3]
+                    if int(class_id) != int(ball_id):
+                        continue
+                    confidence = float(conf) if conf is not None else 0.0
+                    candidates.append(
+                        BallCandidate(bbox=bbox, confidence=confidence, frame_num=frame_num)
+                    )
+
+            selected, state = temporal_tracker.process_frame(
+                candidates, frame_num, frame_shape=frame_shape
+            )
+            if selected is not None:
+                tracks["ball"][frame_num][1] = {
+                    "bbox": selected.bbox,
+                    "conf": selected.confidence,
+                    "detected": state == BallState.DETECTED,
+                    "interpolated": False,
+                    "state": state.value,
+                }
+            elif state == BallState.PREDICTED:
+                trajectory = temporal_tracker.trajectory
+                center = trajectory.predict_position(frame_num)
+                last_bbox = trajectory.last_detected_bbox
+                if center is not None and last_bbox is not None:
+                    width = last_bbox[2] - last_bbox[0]
+                    height = last_bbox[3] - last_bbox[1]
+                    tracks["ball"][frame_num][1] = {
+                        "bbox": [
+                            float(center[0] - width / 2),
+                            float(center[1] - height / 2),
+                            float(center[0] + width / 2),
+                            float(center[1] + height / 2),
+                        ],
+                        "conf": None,
+                        "detected": False,
+                        "interpolated": False,
+                        "state": state.value,
+                    }
+            return
+
         if ball_id is None or len(detections) == 0:
             return
 
@@ -321,7 +401,6 @@ class ImprovedTracker:
             score = float(conf) if conf is not None else 0.0
             if prev_center is not None:
                 dist = np.hypot(center[0] - prev_center[0], center[1] - prev_center[1])
-                # Penalize distance but don't go negative
                 score = max(0.0, score - 0.001 * dist)
             candidates.append((score, bbox, float(conf) if conf is not None else 0.0))
 
