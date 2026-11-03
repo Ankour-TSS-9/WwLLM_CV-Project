@@ -1,6 +1,7 @@
 import os
 import pickle
 import sys
+from bisect import bisect_left
 
 import numpy as np
 import pandas as pd
@@ -48,10 +49,154 @@ class ImprovedTracker:
                     else:
                         position = get_foot_position(bbox)
                     tracks[object_name][frame_num][track_id]["position"] = position
+        self._classify_ball_flight(tracks)
 
-    def interpolate_ball_positions(self, ball_positions, max_gap=None):
+    def _classify_ball_flight(self, tracks):
+        ball_frames = tracks.get("ball") or []
+        if not ball_frames:
+            return
+
+        player_frames = tracks.get("players") or []
+        goalkeeper_frames = tracks.get("goalkeepers") or []
+        player_heights = []
+        for object_tracks in player_frames + goalkeeper_frames:
+            for player in object_tracks.values():
+                bbox = player.get("bbox")
+                if bbox and len(bbox) == 4 and bbox[3] > bbox[1]:
+                    player_heights.append(bbox[3] - bbox[1])
+        reference_height = float(np.median(player_heights)) if player_heights else 40.0
+
+        direct_indices = []
+        direct_modes = {}
+        vertical_positions = {}
+        for frame_num, frame_ball in enumerate(ball_frames):
+            info = frame_ball.get(1)
+            bbox = info.get("bbox") if info else None
+            if not bbox or len(bbox) != 4:
+                continue
+            vertical_positions[frame_num] = (bbox[1] + bbox[3]) / 2.0
+            is_direct = (
+                info.get("detected", info.get("state") != BallState.PREDICTED.value)
+                and not info.get("interpolated", False)
+                and info.get("state") != BallState.PREDICTED.value
+            )
+            if is_direct:
+                direct_indices.append(frame_num)
+
+        for frame_num in direct_indices:
+            info = ball_frames[frame_num][1]
+            bbox = info["bbox"]
+            ball_x = (bbox[0] + bbox[2]) / 2.0
+            ball_y = (bbox[1] + bbox[3]) / 2.0
+            ball_bottom = bbox[3]
+            local_players = []
+            if frame_num < len(player_frames):
+                local_players.extend(player_frames[frame_num].values())
+            if frame_num < len(goalkeeper_frames):
+                local_players.extend(goalkeeper_frames[frame_num].values())
+
+            insertion = bisect_left(direct_indices, frame_num)
+            previous = direct_indices[insertion - 1] if insertion > 0 else None
+            next_frame = (
+                direct_indices[insertion + 1]
+                if insertion + 1 < len(direct_indices)
+                else None
+            )
+            prior = previous if previous is not None and frame_num - previous <= 3 else None
+            following = next_frame if next_frame is not None and next_frame - frame_num <= 3 else None
+
+            confidence = 0.0
+            ground_confidence = 0.0
+            for player in local_players:
+                player_bbox = player.get("bbox")
+                if not player_bbox or len(player_bbox) != 4:
+                    continue
+                player_height = max(1.0, player_bbox[3] - player_bbox[1])
+                foot_distance = np.hypot(
+                    ball_x - (player_bbox[0] + player_bbox[2]) / 2.0,
+                    ball_bottom - player_bbox[3],
+                ) / player_height
+                if foot_distance <= 0.50:
+                    ground_confidence = max(ground_confidence, 0.75)
+
+                horizontal_gap = max(
+                    player_bbox[0] - ball_x,
+                    0.0,
+                    ball_x - player_bbox[2],
+                )
+                vertical_gap = max(player_bbox[1] - ball_y, 0.0, ball_y - player_bbox[3])
+                relative_distance = np.hypot(horizontal_gap, vertical_gap) / player_height
+                if relative_distance > 2.0:
+                    continue
+
+                lift_ratio = (player_bbox[3] - ball_bottom) / player_height
+                if lift_ratio > 2.0 and relative_distance < 2.5:
+                    confidence = max(confidence, 0.95)
+                elif prior is not None and following is not None and lift_ratio > 0.25:
+                    prior_step = (
+                        vertical_positions[frame_num] - vertical_positions[prior]
+                    ) / (frame_num - prior)
+                    following_step = (
+                        vertical_positions[following] - vertical_positions[frame_num]
+                    ) / (following - frame_num)
+                    if (
+                        prior_step * following_step > 0
+                        and abs(prior_step) > 0.20 * player_height
+                        and abs(following_step) > 0.20 * player_height
+                    ):
+                        confidence = max(confidence, 0.70)
+
+            if prior is not None and following is not None:
+                prior_rise = (
+                    vertical_positions[prior] - vertical_positions[frame_num]
+                ) / (frame_num - prior)
+                following_fall = (
+                    vertical_positions[following] - vertical_positions[frame_num]
+                ) / (following - frame_num)
+                arc_height = (
+                    vertical_positions[prior] + vertical_positions[following]
+                ) / 2.0 - vertical_positions[frame_num]
+                if (
+                    arc_height > max(5.0, 0.18 * reference_height)
+                    and prior_rise > 0.12 * reference_height
+                    and following_fall > 0.12 * reference_height
+                ):
+                    confidence = max(confidence, 0.82)
+
+            if confidence > 0:
+                direct_modes[frame_num] = ("airborne", confidence)
+            elif ground_confidence > 0:
+                direct_modes[frame_num] = ("ground", ground_confidence)
+            else:
+                direct_modes[frame_num] = ("unknown", 0.0)
+
+        for frame_num, frame_ball in enumerate(ball_frames):
+            info = frame_ball.get(1)
+            if not info or not info.get("bbox"):
+                continue
+            if frame_num in direct_modes:
+                mode, confidence = direct_modes[frame_num]
+            else:
+                insertion = bisect_left(direct_indices, frame_num)
+                nearby = direct_indices[max(0, insertion - 1):insertion + 1]
+                closest = min(
+                    (index for index in nearby if abs(index - frame_num) <= 6),
+                    key=lambda index: abs(index - frame_num),
+                    default=None,
+                )
+                if closest is None:
+                    mode, confidence = "unknown", 0.0
+                else:
+                    mode, source_confidence = direct_modes[closest]
+                    confidence = source_confidence * 0.8 if mode == "airborne" else 0.0
+
+            info["ball_mode"] = mode
+            info["airborne_confidence"] = round(confidence, 3)
+
+    def interpolate_ball_positions(self, ball_positions, max_gap=None, camera_cuts=None):
         """Linear-fill short gaps only. Long gaps stay empty (no invented ball)."""
         max_gap = config.BALL_MAX_INTERP_GAP if max_gap is None else max_gap
+        camera_cut_set = set(camera_cuts or ())
         rows = []
         detected = []
         
@@ -80,6 +225,8 @@ class ImprovedTracker:
             for left, right in zip(detected_idx, detected_idx[1:]):
                 gap = right - left
                 if not (1 < gap <= max_gap):
+                    continue
+                if any(left < cut <= right for cut in camera_cut_set):
                     continue
                 a = df.iloc[left].tolist()
                 b = df.iloc[right].tolist()
@@ -112,6 +259,37 @@ class ImprovedTracker:
                     payload["state"] = BallState.INTERPOLATED.value
                 out.append({1: payload})
         return out
+
+    def suppress_out_of_frame_predictions(self, ball_positions, frames):
+        """Drop a predicted run once it exits the image, until a real detection returns."""
+        suppressing_run = False
+        reset_frames = []
+        for frame_num, frame_ball in enumerate(ball_positions):
+            info = frame_ball.get(1)
+            if not info:
+                continue
+            if info.get("detected") and info.get("state") != BallState.PREDICTED.value:
+                suppressing_run = False
+                continue
+            if info.get("state") != BallState.PREDICTED.value:
+                continue
+
+            height, width = frames[frame_num].shape[:2]
+            bbox = info.get("bbox")
+            if not bbox or len(bbox) != 4:
+                out_of_frame = True
+            else:
+                center_x = (bbox[0] + bbox[2]) / 2.0
+                center_y = (bbox[1] + bbox[3]) / 2.0
+                out_of_frame = not (0 <= center_x < width and 0 <= center_y < height)
+
+            if out_of_frame and not suppressing_run:
+                reset_frames.append(frame_num)
+                suppressing_run = True
+            if suppressing_run:
+                frame_ball.pop(1, None)
+
+        return reset_frames
     
     def second_pass_ball_detection(self, frames, ball_positions):
         """Second pass: detect ball in missed frames using region around last known position."""
@@ -237,7 +415,7 @@ class ImprovedTracker:
             return config.REFEREE_CONF
         return config.PLAYER_CONF
 
-    def get_object_tracks(self, frames, read_from_stub=False, stub_path=None):
+    def get_object_tracks(self, frames, read_from_stub=False, stub_path=None, camera_cuts=None):
         if read_from_stub and stub_path is not None and os.path.exists(stub_path):
             with open(stub_path, "rb") as f:
                 return pickle.load(f)
@@ -254,6 +432,7 @@ class ImprovedTracker:
 
         prev_ball_center = None
         self.ball_temporal_tracker.reset()
+        camera_cut_set = set(camera_cuts or ())
 
         for frame_num, detection in enumerate(detections):
             cls_names, cls_inv = self._class_lookup(detection.names)
@@ -314,6 +493,7 @@ class ImprovedTracker:
                 prev_ball_center,
                 self.ball_temporal_tracker,
                 frames[frame_num].shape,
+                frame_num in camera_cut_set,
             )
             ball_info = tracks["ball"][frame_num].get(1)
             if ball_info and ball_info.get("bbox") and ball_info.get("detected"):
@@ -338,6 +518,7 @@ class ImprovedTracker:
         prev_center,
         temporal_tracker=None,
         frame_shape=None,
+        is_camera_cut=False,
     ):
         # Model may use "ball" or "football" as class name
         ball_id = cls_inv.get("ball") or cls_inv.get("football")
@@ -356,7 +537,10 @@ class ImprovedTracker:
                     )
 
             selected, state = temporal_tracker.process_frame(
-                candidates, frame_num, frame_shape=frame_shape
+                candidates,
+                frame_num,
+                is_camera_cut=is_camera_cut,
+                frame_shape=frame_shape,
             )
             if selected is not None:
                 tracks["ball"][frame_num][1] = {
@@ -371,6 +555,14 @@ class ImprovedTracker:
                 center = trajectory.predict_position(frame_num)
                 last_bbox = trajectory.last_detected_bbox
                 if center is not None and last_bbox is not None:
+                    if frame_shape is not None:
+                        frame_height, frame_width = frame_shape[:2]
+                        if not (
+                            0 <= center[0] < frame_width
+                            and 0 <= center[1] < frame_height
+                        ):
+                            temporal_tracker.reset()
+                            return
                     width = last_bbox[2] - last_bbox[0]
                     height = last_bbox[3] - last_bbox[1]
                     tracks["ball"][frame_num][1] = {

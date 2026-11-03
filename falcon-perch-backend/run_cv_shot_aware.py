@@ -144,6 +144,7 @@ def run(video_path, model_path, read_from_stub, skip_video, shot_aware=True):
         with open("stats/shots.json", "w", encoding="utf-8") as f:
             json.dump({"shots": shot_summary, "total_shots": len(shots)}, f, indent=2)
         print(f"Wrote stats/shots.json")
+    camera_cuts = [shot.start_frame for shot in shots[1:]]
 
     tracker = ImprovedTracker(model_path)
     print("\n=== OBJECT DETECTION & TRACKING ===")
@@ -157,6 +158,7 @@ def run(video_path, model_path, read_from_stub, skip_video, shot_aware=True):
         video_frames,
         read_from_stub=read_from_stub,
         stub_path="stubs/cv_tracks.pkl",
+        camera_cuts=camera_cuts,
     )
     n_frames = len(video_frames)
 
@@ -178,6 +180,7 @@ def run(video_path, model_path, read_from_stub, skip_video, shot_aware=True):
             video_frames,
             read_from_stub=False,
             stub_path="stubs/cv_tracks.pkl",
+            camera_cuts=camera_cuts,
         )
 
     for key in ("players", "goalkeepers", "referees", "ball"):
@@ -185,8 +188,20 @@ def run(video_path, model_path, read_from_stub, skip_video, shot_aware=True):
         while len(tracks[key]) < n_frames:
             tracks[key].append({})
 
+    prediction_reset_frames = tracker.suppress_out_of_frame_predictions(
+        tracks["ball"], video_frames
+    )
+    if prediction_reset_frames:
+        print(
+            "  Suppressed out-of-frame ball prediction runs at frames: "
+            f"{prediction_reset_frames}"
+        )
+    interpolation_cuts = sorted(set(camera_cuts + prediction_reset_frames))
+
     print("Interpolating short ball gaps...")
-    tracks["ball"] = tracker.interpolate_ball_positions(tracks["ball"])
+    tracks["ball"] = tracker.interpolate_ball_positions(
+        tracks["ball"], camera_cuts=interpolation_cuts
+    )
     
     tracker.add_position_to_tracks(tracks)
 
@@ -263,7 +278,34 @@ def run(video_path, model_path, read_from_stub, skip_video, shot_aware=True):
     speed_estimator.add_speed_and_distance_to_tracks(tracks)
 
     print("Possession...")
-    holders, team_ball_control = assign_possession(tracks, fps)
+    coordinate_overrides = []
+    try:
+        for frame_num, ball_frame in enumerate(tracks["ball"]):
+            ball_info = ball_frame.get(1)
+            if (
+                not ball_info
+                or ball_info.get("position_transformed") is not None
+                or (ball_info.get("position") is None and not ball_info.get("bbox"))
+            ):
+                continue
+            # Keep pixel-space fallback consistent for ball and player points.
+            for key in ("players", "goalkeepers"):
+                if frame_num >= len(tracks.get(key, [])):
+                    continue
+                for player in tracks[key][frame_num].values():
+                    had_transformed_position = "position_transformed" in player
+                    coordinate_overrides.append(
+                        (player, had_transformed_position, player.get("position_transformed"))
+                    )
+                    player["position_transformed"] = None
+
+        holders, team_ball_control = assign_possession(tracks, fps)
+    finally:
+        for player, had_position, position in coordinate_overrides:
+            if had_position:
+                player["position_transformed"] = position
+            else:
+                player.pop("position_transformed", None)
 
     print("Tactics and events...")
     # Use representative pitch dimensions
