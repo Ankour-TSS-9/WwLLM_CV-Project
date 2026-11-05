@@ -1,0 +1,76 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="1060" viewBox="0 0 1120 1060" role="img" aria-labelledby="title description">
+  <title id="title">Football video analysis architecture</title>
+  <desc id="description">Flow diagram of video input, shot detection, YOLO and ByteTrack tracking, ball cleanup, camera compensation, team and identity assignment, pitch mapping, match analysis, report output, and annotated video rendering.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#526581"/>
+    </marker>
+    <style>
+      .bg { fill: #f4f7fb; }
+      .title { font: 700 28px "Segoe UI", Arial, sans-serif; fill: #15243b; }
+      .subtitle { font: 15px "Segoe UI", Arial, sans-serif; fill: #526581; }
+      .box { fill: #fff; stroke: #8ca0ba; stroke-width: 2; rx: 12; }
+      .input { fill: #e8f1ff; stroke: #4b78b8; }
+      .stage { fill: #fff; stroke: #8ca0ba; }
+      .analysis { fill: #eaf7f0; stroke: #4f9a70; }
+      .output { fill: #fff4e5; stroke: #d08b37; }
+      .label { font: 700 16px "Segoe UI", Arial, sans-serif; fill: #1c2d45; text-anchor: middle; }
+      .detail { font: 13px "Segoe UI", Arial, sans-serif; fill: #526581; text-anchor: middle; }
+      .arrow { fill: none; stroke: #526581; stroke-width: 2.4; marker-end: url(#arrow); }
+      .branch { fill: none; stroke: #526581; stroke-width: 2.2; }
+      .note { font: 12px "Segoe UI", Arial, sans-serif; fill: #526581; }
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="1060" rx="18"/>
+  <text class="title" x="560" y="48" text-anchor="middle">Football Video Analysis Pipeline</text>
+  <text class="subtitle" x="560" y="75" text-anchor="middle">Shot-aware computer vision, match analytics, and generated outputs</text>
+
+  <rect class="box input" x="340" y="105" width="440" height="74"/>
+  <text class="label" x="560" y="135">Input video</text>
+  <text class="detail" x="560" y="158">OpenCV reads frames, FPS, resolution, and duration</text>
+
+  <path class="arrow" d="M560 179 V204"/>
+  <rect class="box stage" x="340" y="207" width="440" height="76"/>
+  <text class="label" x="560" y="237">Shot detection (default)</text>
+  <text class="detail" x="560" y="260">Find broadcast cuts and classify each shot</text>
+  <text class="note" x="795" y="250">Can be disabled</text>
+
+  <path class="arrow" d="M560 283 V308"/>
+  <rect class="box stage" x="340" y="311" width="440" height="76"/>
+  <text class="label" x="560" y="341">Object detection and tracking</text>
+  <text class="detail" x="560" y="364">YOLO + ByteTrack; temporal ball tracking</text>
+
+  <path class="arrow" d="M560 387 V412"/>
+  <rect class="box stage" x="340" y="415" width="440" height="76"/>
+  <text class="label" x="560" y="445">Track cleanup and positions</text>
+  <text class="detail" x="560" y="468">Filter invalid ball predictions; interpolate short gaps</text>
+
+  <path class="arrow" d="M560 491 V516"/>
+  <rect class="box stage" x="340" y="519" width="440" height="76"/>
+  <text class="label" x="560" y="549">Camera-motion compensation</text>
+  <text class="detail" x="560" y="572">ORB GMC by default; Lucas–Kanade baseline</text>
+
+  <path class="arrow" d="M560 595 V620"/>
+  <rect class="box stage" x="340" y="623" width="440" height="76"/>
+  <text class="label" x="560" y="653">Team assignment and identity stitching</text>
+  <text class="detail" x="560" y="676">K-means shirt-color clusters; context-aware IDs</text>
+
+  <path class="arrow" d="M560 699 V724"/>
+  <rect class="box stage" x="340" y="727" width="440" height="76"/>
+  <text class="label" x="560" y="757">Pitch calibration and mapping</text>
+  <text class="detail" x="560" y="780">Shot-aware pitch transforms image positions to meters</text>
+
+  <path class="arrow" d="M560 803 V828"/>
+  <rect class="box analysis" x="340" y="831" width="440" height="88"/>
+  <text class="label" x="560" y="862">Match analysis</text>
+  <text class="detail" x="560" y="885">Speed, distance, possession, events, tactics, statistics</text>
+
+  <path class="branch" d="M560 919 V944 H280 V966"/>
+  <path class="arrow" d="M560 944 H840 V966"/>
+  <rect class="box output" x="80" y="969" width="400" height="70"/>
+  <text class="label" x="280" y="998">Analysis outputs</text>
+  <text class="detail" x="280" y="1021">stats/*.json · events · shots · track cache</text>
+  <rect class="box output" x="640" y="969" width="400" height="70"/>
+  <text class="label" x="840" y="998">Annotated video</text>
+  <text class="detail" x="840" y="1021">Overlays and speed/distance · optional</text>
+</svg>
