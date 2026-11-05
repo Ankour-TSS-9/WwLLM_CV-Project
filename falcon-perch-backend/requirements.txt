@@ -1,8 +1,16 @@
 elevenlabs==2.74.1
-numpy>=1.26,<2.5
+numpy>=1.26,<2.0
 opencv-python==4.12.0.88
-pandas==3.1.0
-protobuf==7.36.2
-scikit_learn==1.9.1
-supervision==0.31.2
-ultralytics==8.4.189
+pandas==2.2.3
+protobuf==4.25.5
+scikit_learn==1.5.2
+supervision==0.19.0
+ultralytics==8.4.52
+
+# LLM & API Server
+groq>=0.4.2
+fastapi>=0.115.0
+uvicorn[standard]>=0.34.0
+python-multipart>=0.0.20
+pydantic>=2.10.0
+python-dotenv>=1.0.0

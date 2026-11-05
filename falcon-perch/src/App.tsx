@@ -16,6 +16,7 @@ import * as profileService from './services/profileService'
 import { SPORTS, type OnboardingProfile, type SkillLevel, type Sport, type User, type AthleteGoal } from './types'
 import { LandingPage } from './pages/LandingPage'
 import { DashboardPage } from './pages/DashboardPage'
+import { AIFeaturesDemo } from './pages/AIFeaturesDemo'
 import { getSportTheme } from './theme/sportThemes'
 import './App.css'
 
@@ -927,8 +928,8 @@ function AppRoutes({
             />
             <Route path="/idols" element={<LaterPage path="/idols" />} />
             <Route path="/idols/:id" element={<LaterPage path="/idols" />} />
-            <Route path="/analyze" element={<LaterPage path="/analyze" />} />
-            <Route path="/analyze/review/:id" element={<LaterPage path="/analyze" />} />
+            <Route path="/analyze" element={<AIFeaturesDemo />} />
+            <Route path="/analyze/review/:id" element={<AIFeaturesDemo />} />
             <Route path="/analyze-own" element={<LaterPage path="/analyze-own" />} />
             <Route path="/pathways" element={<LaterPage path="/pathways" />} />
             <Route path="/pathways/:sport" element={<LaterPage path="/pathways" />} />

@@ -9,3 +9,6 @@ input_videos/*.mp4
 commentary_audio/
 models/*.pt
 .env
+.sh
+.md
+.env.example
