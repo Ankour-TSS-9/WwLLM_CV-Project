@@ -6,4 +6,11 @@ protobuf==7.36.2
 scikit_learn==1.9.1
 supervision==0.31.2
 ultralytics==8.4.189
-python-dotenv
+
+# LLM & API Server
+groq>=0.4.2
+fastapi>=0.115.0
+uvicorn[standard]>=0.34.0
+python-multipart>=0.0.20
+pydantic>=2.10.0
+python-dotenv>=1.0.0

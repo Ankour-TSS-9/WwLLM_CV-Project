@@ -6,7 +6,7 @@
     "team": 1,
     "player_id": 1,
     "role": "player",
-    "speed_kmh": 27.1,
+    "speed_kmh": 27.0,
     "duration_s": 1.0
   },
   {
@@ -15,7 +15,7 @@
     "type": "carry",
     "team": 1,
     "player_id": 3,
-    "distance": 20.63,
+    "distance": 20.64,
     "unit": "m",
     "end_time": 2.48,
     "zone": "final_third"
@@ -37,7 +37,7 @@
     "team": 1,
     "player_id": 7,
     "role": "player",
-    "speed_kmh": 31.6,
+    "speed_kmh": 31.4,
     "duration_s": 2.8
   },
   {
@@ -47,7 +47,7 @@
     "team": 1,
     "player_id": 10,
     "role": "player",
-    "speed_kmh": 33.2,
+    "speed_kmh": 33.6,
     "duration_s": 2.4
   },
   {
@@ -57,7 +57,7 @@
     "team": 1,
     "player_id": 22,
     "role": "player",
-    "speed_kmh": 34.6,
+    "speed_kmh": 35.0,
     "duration_s": 2.4
   },
   {
@@ -87,7 +87,7 @@
     "team": 1,
     "player_id": 13,
     "role": "player",
-    "speed_kmh": 34.7,
+    "speed_kmh": 34.6,
     "duration_s": 2.2
   },
   {
@@ -107,7 +107,7 @@
     "team": 1,
     "player_id": 8,
     "role": "player",
-    "speed_kmh": 34.9,
+    "speed_kmh": 35.0,
     "duration_s": 1.2
   },
   {
@@ -117,7 +117,7 @@
     "team": 1,
     "player_id": 12,
     "role": "player",
-    "speed_kmh": 27.3,
+    "speed_kmh": 27.6,
     "duration_s": 1.4
   },
   {
@@ -165,7 +165,7 @@
     "team": 1,
     "player_id": 6,
     "role": "player",
-    "speed_kmh": 27.8,
+    "speed_kmh": 27.9,
     "duration_s": 1.0
   },
   {
@@ -185,7 +185,7 @@
     "team": 1,
     "player_id": 12,
     "role": "player",
-    "speed_kmh": 31.4,
+    "speed_kmh": 31.5,
     "duration_s": 2.6
   },
   {
@@ -195,7 +195,7 @@
     "team": 2,
     "player_id": 37,
     "role": "player",
-    "speed_kmh": 29.5,
+    "speed_kmh": 29.4,
     "duration_s": 1.72
   },
   {
@@ -215,7 +215,7 @@
     "team": 1,
     "player_id": 40,
     "role": "player",
-    "speed_kmh": 35.3,
+    "speed_kmh": 35.1,
     "duration_s": 1.6
   },
   {
@@ -235,7 +235,7 @@
     "team": 1,
     "player_id": 20,
     "role": "player",
-    "speed_kmh": 29.0,
+    "speed_kmh": 28.9,
     "duration_s": 1.0
   },
   {
@@ -244,7 +244,7 @@
     "type": "carry",
     "team": 2,
     "player_id": 17,
-    "distance": 53.51,
+    "distance": 53.5,
     "unit": "m",
     "end_time": 16.32,
     "zone": "middle_third"
@@ -286,7 +286,7 @@
     "team": 1,
     "player_id": 1,
     "role": "player",
-    "speed_kmh": 29.8,
+    "speed_kmh": 29.5,
     "duration_s": 3.0
   },
   {
@@ -296,7 +296,7 @@
     "team": 1,
     "player_id": 3,
     "role": "player",
-    "speed_kmh": 32.8,
+    "speed_kmh": 33.0,
     "duration_s": 1.0
   },
   {
@@ -306,7 +306,7 @@
     "team": 1,
     "player_id": 6,
     "role": "player",
-    "speed_kmh": 31.5,
+    "speed_kmh": 31.6,
     "duration_s": 2.6
   },
   {
@@ -336,7 +336,7 @@
     "team": 1,
     "player_id": 20,
     "role": "player",
-    "speed_kmh": 28.5,
+    "speed_kmh": 28.3,
     "duration_s": 2.2
   },
   {
@@ -346,7 +346,7 @@
     "team": 1,
     "player_id": 11,
     "role": "player",
-    "speed_kmh": 34.3,
+    "speed_kmh": 34.1,
     "duration_s": 2.4
   },
   {
@@ -356,7 +356,7 @@
     "team": 1,
     "player_id": 16,
     "role": "player",
-    "speed_kmh": 35.1,
+    "speed_kmh": 35.3,
     "duration_s": 3.8
   },
   {
@@ -366,7 +366,7 @@
     "team": 1,
     "player_id": 7,
     "role": "player",
-    "speed_kmh": 30.8,
+    "speed_kmh": 30.7,
     "duration_s": 1.8
   },
   {
@@ -376,7 +376,7 @@
     "team": 1,
     "player_id": 9,
     "role": "player",
-    "speed_kmh": 30.8,
+    "speed_kmh": 30.6,
     "duration_s": 2.2
   },
   {
@@ -386,7 +386,7 @@
     "team": 1,
     "player_id": 12,
     "role": "player",
-    "speed_kmh": 23.3,
+    "speed_kmh": 23.4,
     "duration_s": 1.0
   },
   {
@@ -406,7 +406,7 @@
     "team": 1,
     "player_id": 10,
     "role": "player",
-    "speed_kmh": 31.1,
+    "speed_kmh": 31.2,
     "duration_s": 1.4
   },
   {
@@ -416,7 +416,7 @@
     "team": 1,
     "player_id": 22,
     "role": "player",
-    "speed_kmh": 26.0,
+    "speed_kmh": 25.9,
     "duration_s": 1.4
   },
   {
@@ -426,7 +426,7 @@
     "team": 1,
     "player_id": 1,
     "role": "player",
-    "speed_kmh": 31.9,
+    "speed_kmh": 31.8,
     "duration_s": 1.2
   },
   {
@@ -526,7 +526,7 @@
     "team": 1,
     "player_id": 4,
     "role": "player",
-    "speed_kmh": 35.3,
+    "speed_kmh": 35.1,
     "duration_s": 1.2
   },
   {
@@ -559,7 +559,7 @@
     "type": "carry",
     "team": 1,
     "player_id": 16,
-    "distance": 4.57,
+    "distance": 4.62,
     "unit": "m",
     "end_time": 27.12,
     "zone": "final_third"
@@ -571,7 +571,7 @@
     "to_player_id": 16,
     "from_team": 1,
     "to_team": 1,
-    "ball_travel": 0.21,
+    "ball_travel": 0.2,
     "unit": "m",
     "gap_s": 0.04,
     "type": "pass",
@@ -607,7 +607,7 @@
     "type": "shot_or_clearance",
     "team": 1,
     "player_id": 16,
-    "ball_speed_kmh": 105.6,
+    "ball_speed_kmh": 105.5,
     "role": "player"
   },
   {
@@ -655,7 +655,7 @@
     "team": 1,
     "player_id": 26,
     "role": "player",
-    "speed_kmh": 33.2,
+    "speed_kmh": 33.0,
     "duration_s": 1.0
   },
   {
@@ -664,7 +664,7 @@
     "type": "shot_or_clearance",
     "team": 1,
     "player_id": 1,
-    "ball_speed_kmh": 100.2,
+    "ball_speed_kmh": 99.9,
     "role": "player"
   },
   {
@@ -674,7 +674,7 @@
     "team": 1,
     "player_id": 1,
     "role": "player",
-    "speed_kmh": 35.4,
+    "speed_kmh": 35.3,
     "duration_s": 1.4
   },
   {

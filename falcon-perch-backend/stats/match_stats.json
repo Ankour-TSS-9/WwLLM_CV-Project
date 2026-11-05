@@ -1,6 +1,6 @@
 {
   "meta": {
-    "video_path": "input_videos/08fd33_4.mp4",
+    "video_path": "/Users/anikethchakravarthy/Documents/WLLM_PROJECT/WwLLM_CV-Project/falcon-perch-backend/input_videos/WhatsApp Video 2026-11-05 at 13.44.14.mp4",
     "fps": 25.0,
     "frames": 750,
     "duration_s": 30.0,
@@ -16,7 +16,7 @@
       "possession": 0.543,
       "possession_known_frames": 302,
       "players_tracked": 23,
-      "distance_m": 2764.24,
+      "distance_m": 2764.97,
       "passes": 2,
       "progressive_passes": 1,
       "turnovers_won": 0,
@@ -60,7 +60,7 @@
           0
         ],
         [
-          55,
+          50,
           232,
           256,
           109,
@@ -70,7 +70,7 @@
           0
         ],
         [
-          137,
+          142,
           185,
           159,
           202,
@@ -81,48 +81,48 @@
         ],
         [
           162,
-          359,
+          360,
           164,
           197,
           95,
-          87,
+          86,
           32,
           0
         ],
         [
-          112,
-          456,
-          334,
-          270,
+          114,
+          455,
+          333,
+          271,
           74,
-          55,
+          56,
           38,
           0
         ],
         [
-          424,
-          171,
+          421,
+          170,
           400,
           498,
-          329,
+          328,
           95,
           4,
           17
         ],
         [
-          435,
-          603,
-          912,
-          322,
-          233,
+          436,
+          605,
+          913,
+          323,
+          234,
           101,
           24,
           1
         ],
         [
           290,
-          347,
-          470,
+          345,
+          472,
           332,
           76,
           80,
@@ -131,20 +131,20 @@
         ],
         [
           0,
-          158,
-          437,
+          159,
+          436,
           298,
           98,
-          99,
+          98,
           15,
           13
         ],
         [
           0,
-          248,
-          545,
-          276,
-          73,
+          247,
+          544,
+          278,
+          74,
           102,
           28,
           14
@@ -152,10 +152,10 @@
         [
           0,
           138,
-          359,
-          287,
-          29,
-          48,
+          358,
+          286,
+          28,
+          49,
           9,
           4
         ]
@@ -165,7 +165,7 @@
       "possession": 0.457,
       "possession_known_frames": 302,
       "players_tracked": 13,
-      "distance_m": 365.58,
+      "distance_m": 365.4,
       "passes": 0,
       "progressive_passes": 0,
       "turnovers_won": 0,
@@ -230,7 +230,7 @@
         ],
         [
           111,
-          91,
+          90,
           0,
           0,
           0,
@@ -240,7 +240,7 @@
         ],
         [
           138,
-          131,
+          132,
           0,
           0,
           0,
@@ -264,7 +264,7 @@
           143,
           0,
           0,
-          6,
+          5,
           0,
           0
         ],
@@ -284,7 +284,7 @@
           0,
           0,
           0,
-          175,
+          180,
           1,
           43
         ],
@@ -294,7 +294,7 @@
           0,
           0,
           0,
-          85,
+          81,
           12,
           0
         ],
@@ -329,11 +329,11 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 1,
-      "distance_m": 171.9,
-      "distance_on_ball_m": 2.56,
-      "distance_off_ball_m": 169.34,
-      "max_speed_kmh": 35.41,
-      "avg_speed_kmh": 17.68,
+      "distance_m": 171.82,
+      "distance_on_ball_m": 2.57,
+      "distance_off_ball_m": 169.25,
+      "max_speed_kmh": 35.28,
+      "avg_speed_kmh": 17.67,
       "zone_frames": {
         "own_third": 68,
         "middle_third": 418,
@@ -358,15 +358,15 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 137.35,
-      "distance_on_ball_m": 1.5,
-      "distance_off_ball_m": 135.84,
-      "max_speed_kmh": 34.75,
-      "avg_speed_kmh": 15.1,
+      "distance_m": 137.15,
+      "distance_on_ball_m": 1.52,
+      "distance_off_ball_m": 135.63,
+      "max_speed_kmh": 34.62,
+      "avg_speed_kmh": 15.09,
       "zone_frames": {
         "own_third": 327,
-        "middle_third": 381,
-        "final_third": 42,
+        "middle_third": 383,
+        "final_third": 40,
         "unknown": 0
       }
     },
@@ -387,11 +387,11 @@
       "pressures_faced": 0,
       "box_entries": 2,
       "shots": 0,
-      "distance_m": 143.06,
-      "distance_on_ball_m": 3.51,
-      "distance_off_ball_m": 139.55,
-      "max_speed_kmh": 31.42,
-      "avg_speed_kmh": 14.36,
+      "distance_m": 143.19,
+      "distance_on_ball_m": 3.5,
+      "distance_off_ball_m": 139.69,
+      "max_speed_kmh": 31.49,
+      "avg_speed_kmh": 14.37,
       "zone_frames": {
         "own_third": 0,
         "middle_third": 344,
@@ -416,11 +416,11 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 88.17,
+      "distance_m": 88.35,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 88.17,
-      "max_speed_kmh": 22.14,
-      "avg_speed_kmh": 9.32,
+      "distance_off_ball_m": 88.35,
+      "max_speed_kmh": 22.22,
+      "avg_speed_kmh": 9.33,
       "zone_frames": {
         "own_third": 261,
         "middle_third": 489,
@@ -445,11 +445,11 @@
       "pressures_faced": 0,
       "box_entries": 1,
       "shots": 1,
-      "distance_m": 158.6,
-      "distance_on_ball_m": 3.15,
-      "distance_off_ball_m": 155.45,
-      "max_speed_kmh": 35.7,
-      "avg_speed_kmh": 15.56,
+      "distance_m": 158.56,
+      "distance_on_ball_m": 3.18,
+      "distance_off_ball_m": 155.38,
+      "max_speed_kmh": 35.44,
+      "avg_speed_kmh": 15.55,
       "zone_frames": {
         "own_third": 0,
         "middle_third": 384,
@@ -474,11 +474,11 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 103.84,
+      "distance_m": 103.88,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 103.84,
+      "distance_off_ball_m": 103.88,
       "max_speed_kmh": 33.78,
-      "avg_speed_kmh": 11.6,
+      "avg_speed_kmh": 11.61,
       "zone_frames": {
         "own_third": 0,
         "middle_third": 387,
@@ -503,10 +503,10 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 115.23,
+      "distance_m": 115.45,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 115.23,
-      "max_speed_kmh": 34.6,
+      "distance_off_ball_m": 115.45,
+      "max_speed_kmh": 35.0,
       "avg_speed_kmh": 12.67,
       "zone_frames": {
         "own_third": 35,
@@ -532,11 +532,11 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 235.64,
-      "distance_on_ball_m": 9.54,
-      "distance_off_ball_m": 226.1,
-      "max_speed_kmh": 35.38,
-      "avg_speed_kmh": 18.27,
+      "distance_m": 235.67,
+      "distance_on_ball_m": 9.55,
+      "distance_off_ball_m": 226.12,
+      "max_speed_kmh": 35.41,
+      "avg_speed_kmh": 18.28,
       "zone_frames": {
         "own_third": 113,
         "middle_third": 330,
@@ -561,11 +561,11 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 129.81,
+      "distance_m": 129.92,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 129.81,
+      "distance_off_ball_m": 129.92,
       "max_speed_kmh": 33.19,
-      "avg_speed_kmh": 14.51,
+      "avg_speed_kmh": 14.5,
       "zone_frames": {
         "own_third": 0,
         "middle_third": 201,
@@ -590,11 +590,11 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 134.63,
+      "distance_m": 134.74,
       "distance_on_ball_m": 9.78,
-      "distance_off_ball_m": 124.86,
-      "max_speed_kmh": 34.18,
-      "avg_speed_kmh": 13.8,
+      "distance_off_ball_m": 124.96,
+      "max_speed_kmh": 34.07,
+      "avg_speed_kmh": 13.79,
       "zone_frames": {
         "own_third": 395,
         "middle_third": 349,
@@ -619,10 +619,10 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 163.21,
+      "distance_m": 163.26,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 163.21,
-      "max_speed_kmh": 35.86,
+      "distance_off_ball_m": 163.26,
+      "max_speed_kmh": 35.87,
       "avg_speed_kmh": 14.67,
       "zone_frames": {
         "own_third": 388,
@@ -648,15 +648,15 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 119.48,
+      "distance_m": 119.31,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 119.48,
-      "max_speed_kmh": 34.73,
+      "distance_off_ball_m": 119.31,
+      "max_speed_kmh": 34.56,
       "avg_speed_kmh": 13.34,
       "zone_frames": {
         "own_third": 0,
-        "middle_third": 516,
-        "final_third": 222,
+        "middle_third": 517,
+        "final_third": 221,
         "unknown": 0
       }
     },
@@ -677,16 +677,16 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 128.25,
+      "distance_m": 128.46,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 128.25,
+      "distance_off_ball_m": 128.46,
       "max_speed_kmh": 35.31,
-      "avg_speed_kmh": 13.8,
+      "avg_speed_kmh": 13.83,
       "zone_frames": {
         "own_third": 0,
         "middle_third": 205,
-        "final_third": 365,
-        "unknown": 158
+        "final_third": 366,
+        "unknown": 157
       }
     },
     {
@@ -709,8 +709,8 @@
       "distance_m": 135.96,
       "distance_on_ball_m": 0.0,
       "distance_off_ball_m": 135.96,
-      "max_speed_kmh": 31.2,
-      "avg_speed_kmh": 14.28,
+      "max_speed_kmh": 35.96,
+      "avg_speed_kmh": 14.48,
       "zone_frames": {
         "own_third": 0,
         "middle_third": 162,
@@ -735,11 +735,11 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 171.98,
+      "distance_m": 171.96,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 171.98,
-      "max_speed_kmh": 35.99,
-      "avg_speed_kmh": 18.04,
+      "distance_off_ball_m": 171.96,
+      "max_speed_kmh": 35.84,
+      "avg_speed_kmh": 18.05,
       "zone_frames": {
         "own_third": 0,
         "middle_third": 306,
@@ -764,11 +764,11 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 74.72,
+      "distance_m": 74.82,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 74.72,
-      "max_speed_kmh": 19.08,
-      "avg_speed_kmh": 8.38,
+      "distance_off_ball_m": 74.82,
+      "max_speed_kmh": 19.26,
+      "avg_speed_kmh": 8.39,
       "zone_frames": {
         "own_third": 0,
         "middle_third": 564,
@@ -793,11 +793,11 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 143.54,
+      "distance_m": 143.79,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 143.54,
+      "distance_off_ball_m": 143.79,
       "max_speed_kmh": 32.26,
-      "avg_speed_kmh": 14.98,
+      "avg_speed_kmh": 14.99,
       "zone_frames": {
         "own_third": 0,
         "middle_third": 262,
@@ -825,8 +825,8 @@
       "distance_m": 131.04,
       "distance_on_ball_m": 0.0,
       "distance_off_ball_m": 131.04,
-      "max_speed_kmh": 34.9,
-      "avg_speed_kmh": 14.29,
+      "max_speed_kmh": 35.0,
+      "avg_speed_kmh": 14.3,
       "zone_frames": {
         "own_third": 0,
         "middle_third": 138,
@@ -851,11 +851,11 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 150.36,
+      "distance_m": 150.15,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 150.36,
-      "max_speed_kmh": 35.27,
-      "avg_speed_kmh": 13.67,
+      "distance_off_ball_m": 150.15,
+      "max_speed_kmh": 35.09,
+      "avg_speed_kmh": 13.65,
       "zone_frames": {
         "own_third": 307,
         "middle_third": 383,
@@ -880,11 +880,11 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 49.44,
+      "distance_m": 49.42,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 49.44,
-      "max_speed_kmh": 35.26,
-      "avg_speed_kmh": 21.97,
+      "distance_off_ball_m": 49.42,
+      "max_speed_kmh": 35.13,
+      "avg_speed_kmh": 21.98,
       "zone_frames": {
         "own_third": 0,
         "middle_third": 7,
@@ -909,9 +909,9 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 72.16,
+      "distance_m": 72.18,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 72.16,
+      "distance_off_ball_m": 72.18,
       "max_speed_kmh": 34.63,
       "avg_speed_kmh": 11.46,
       "zone_frames": {
@@ -967,11 +967,11 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 5.87,
+      "distance_m": 5.89,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 5.87,
-      "max_speed_kmh": 18.62,
-      "avg_speed_kmh": 11.75,
+      "distance_off_ball_m": 5.89,
+      "max_speed_kmh": 18.67,
+      "avg_speed_kmh": 11.76,
       "zone_frames": {
         "own_third": 0,
         "middle_third": 36,
@@ -996,8 +996,8 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 130.03,
-      "distance_on_ball_m": 3.2,
+      "distance_m": 130.05,
+      "distance_on_ball_m": 3.22,
       "distance_off_ball_m": 126.83,
       "max_speed_kmh": 32.97,
       "avg_speed_kmh": 13.15,
@@ -1054,11 +1054,11 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 16.38,
+      "distance_m": 16.37,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 16.38,
-      "max_speed_kmh": 17.76,
-      "avg_speed_kmh": 8.23,
+      "distance_off_ball_m": 16.37,
+      "max_speed_kmh": 17.42,
+      "avg_speed_kmh": 8.21,
       "zone_frames": {
         "own_third": 0,
         "middle_third": 60,
@@ -1083,15 +1083,15 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 34.87,
+      "distance_m": 34.9,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 34.87,
-      "max_speed_kmh": 29.55,
-      "avg_speed_kmh": 10.86,
+      "distance_off_ball_m": 34.9,
+      "max_speed_kmh": 29.37,
+      "avg_speed_kmh": 10.87,
       "zone_frames": {
         "own_third": 0,
-        "middle_third": 176,
-        "final_third": 37,
+        "middle_third": 177,
+        "final_third": 36,
         "unknown": 93
       }
     },
@@ -1112,11 +1112,11 @@
       "pressures_faced": 0,
       "box_entries": 1,
       "shots": 0,
-      "distance_m": 6.98,
-      "distance_on_ball_m": 3.54,
+      "distance_m": 6.95,
+      "distance_on_ball_m": 3.52,
       "distance_off_ball_m": 3.44,
-      "max_speed_kmh": 18.34,
-      "avg_speed_kmh": 9.94,
+      "max_speed_kmh": 18.4,
+      "avg_speed_kmh": 9.98,
       "zone_frames": {
         "own_third": 0,
         "middle_third": 0,
@@ -1141,11 +1141,11 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 34.69,
+      "distance_m": 34.72,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 34.69,
-      "max_speed_kmh": 30.97,
-      "avg_speed_kmh": 9.94,
+      "distance_off_ball_m": 34.72,
+      "max_speed_kmh": 31.15,
+      "avg_speed_kmh": 9.99,
       "zone_frames": {
         "own_third": 0,
         "middle_third": 0,
@@ -1170,11 +1170,11 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 17.36,
+      "distance_m": 17.4,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 17.36,
-      "max_speed_kmh": 30.78,
-      "avg_speed_kmh": 5.2,
+      "distance_off_ball_m": 17.4,
+      "max_speed_kmh": 30.79,
+      "avg_speed_kmh": 5.18,
       "zone_frames": {
         "own_third": 169,
         "middle_third": 0,
@@ -1199,14 +1199,14 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 56.9,
+      "distance_m": 56.85,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 56.9,
-      "max_speed_kmh": 34.86,
-      "avg_speed_kmh": 12.84,
+      "distance_off_ball_m": 56.85,
+      "max_speed_kmh": 34.97,
+      "avg_speed_kmh": 12.83,
       "zone_frames": {
-        "own_third": 147,
-        "middle_third": 9,
+        "own_third": 150,
+        "middle_third": 6,
         "final_third": 0,
         "unknown": 0
       }
@@ -1228,10 +1228,10 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 8.18,
+      "distance_m": 7.91,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 8.18,
-      "max_speed_kmh": 5.8,
+      "distance_off_ball_m": 7.91,
+      "max_speed_kmh": 5.83,
       "avg_speed_kmh": 3.6,
       "zone_frames": {
         "own_third": 0,
@@ -1257,11 +1257,11 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 4.16,
+      "distance_m": 4.17,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 4.16,
-      "max_speed_kmh": 4.33,
-      "avg_speed_kmh": 2.35,
+      "distance_off_ball_m": 4.17,
+      "max_speed_kmh": 4.21,
+      "avg_speed_kmh": 2.3,
       "zone_frames": {
         "own_third": 0,
         "middle_third": 71,
@@ -1286,10 +1286,10 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 4.53,
+      "distance_m": 4.52,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 4.53,
-      "max_speed_kmh": 14.09,
+      "distance_off_ball_m": 4.52,
+      "max_speed_kmh": 14.12,
       "avg_speed_kmh": 5.53,
       "zone_frames": {
         "own_third": 0,
@@ -1315,11 +1315,11 @@
       "pressures_faced": 0,
       "box_entries": 0,
       "shots": 0,
-      "distance_m": 2.67,
+      "distance_m": 2.73,
       "distance_on_ball_m": 0.0,
-      "distance_off_ball_m": 2.67,
-      "max_speed_kmh": 6.64,
-      "avg_speed_kmh": 3.78,
+      "distance_off_ball_m": 2.73,
+      "max_speed_kmh": 6.7,
+      "avg_speed_kmh": 3.79,
       "zone_frames": {
         "own_third": 0,
         "middle_third": 49,
@@ -1381,7 +1381,7 @@
       "team": 1,
       "player_id": 1,
       "role": "player",
-      "speed_kmh": 27.1,
+      "speed_kmh": 27.0,
       "duration_s": 1.0
     },
     {
@@ -1390,7 +1390,7 @@
       "type": "carry",
       "team": 1,
       "player_id": 3,
-      "distance": 20.63,
+      "distance": 20.64,
       "unit": "m",
       "end_time": 2.48,
       "zone": "final_third"
@@ -1412,7 +1412,7 @@
       "team": 1,
       "player_id": 7,
       "role": "player",
-      "speed_kmh": 31.6,
+      "speed_kmh": 31.4,
       "duration_s": 2.8
     },
     {
@@ -1422,7 +1422,7 @@
       "team": 1,
       "player_id": 10,
       "role": "player",
-      "speed_kmh": 33.2,
+      "speed_kmh": 33.6,
       "duration_s": 2.4
     },
     {
@@ -1432,7 +1432,7 @@
       "team": 1,
       "player_id": 22,
       "role": "player",
-      "speed_kmh": 34.6,
+      "speed_kmh": 35.0,
       "duration_s": 2.4
     },
     {
@@ -1462,7 +1462,7 @@
       "team": 1,
       "player_id": 13,
       "role": "player",
-      "speed_kmh": 34.7,
+      "speed_kmh": 34.6,
       "duration_s": 2.2
     },
     {
@@ -1482,7 +1482,7 @@
       "team": 1,
       "player_id": 8,
       "role": "player",
-      "speed_kmh": 34.9,
+      "speed_kmh": 35.0,
       "duration_s": 1.2
     },
     {
@@ -1492,7 +1492,7 @@
       "team": 1,
       "player_id": 12,
       "role": "player",
-      "speed_kmh": 27.3,
+      "speed_kmh": 27.6,
       "duration_s": 1.4
     },
     {
@@ -1540,7 +1540,7 @@
       "team": 1,
       "player_id": 6,
       "role": "player",
-      "speed_kmh": 27.8,
+      "speed_kmh": 27.9,
       "duration_s": 1.0
     },
     {
@@ -1560,7 +1560,7 @@
       "team": 1,
       "player_id": 12,
       "role": "player",
-      "speed_kmh": 31.4,
+      "speed_kmh": 31.5,
       "duration_s": 2.6
     },
     {
@@ -1570,7 +1570,7 @@
       "team": 2,
       "player_id": 37,
       "role": "player",
-      "speed_kmh": 29.5,
+      "speed_kmh": 29.4,
       "duration_s": 1.72
     },
     {
@@ -1590,7 +1590,7 @@
       "team": 1,
       "player_id": 40,
       "role": "player",
-      "speed_kmh": 35.3,
+      "speed_kmh": 35.1,
       "duration_s": 1.6
     },
     {
@@ -1610,7 +1610,7 @@
       "team": 1,
       "player_id": 20,
       "role": "player",
-      "speed_kmh": 29.0,
+      "speed_kmh": 28.9,
       "duration_s": 1.0
     },
     {
@@ -1619,7 +1619,7 @@
       "type": "carry",
       "team": 2,
       "player_id": 17,
-      "distance": 53.51,
+      "distance": 53.5,
       "unit": "m",
       "end_time": 16.32,
       "zone": "middle_third"
@@ -1661,7 +1661,7 @@
       "team": 1,
       "player_id": 1,
       "role": "player",
-      "speed_kmh": 29.8,
+      "speed_kmh": 29.5,
       "duration_s": 3.0
     },
     {
@@ -1671,7 +1671,7 @@
       "team": 1,
       "player_id": 3,
       "role": "player",
-      "speed_kmh": 32.8,
+      "speed_kmh": 33.0,
       "duration_s": 1.0
     },
     {
@@ -1681,7 +1681,7 @@
       "team": 1,
       "player_id": 6,
       "role": "player",
-      "speed_kmh": 31.5,
+      "speed_kmh": 31.6,
       "duration_s": 2.6
     },
     {
@@ -1711,7 +1711,7 @@
       "team": 1,
       "player_id": 20,
       "role": "player",
-      "speed_kmh": 28.5,
+      "speed_kmh": 28.3,
       "duration_s": 2.2
     },
     {
@@ -1721,7 +1721,7 @@
       "team": 1,
       "player_id": 11,
       "role": "player",
-      "speed_kmh": 34.3,
+      "speed_kmh": 34.1,
       "duration_s": 2.4
     },
     {
@@ -1731,7 +1731,7 @@
       "team": 1,
       "player_id": 16,
       "role": "player",
-      "speed_kmh": 35.1,
+      "speed_kmh": 35.3,
       "duration_s": 3.8
     },
     {
@@ -1741,7 +1741,7 @@
       "team": 1,
       "player_id": 7,
       "role": "player",
-      "speed_kmh": 30.8,
+      "speed_kmh": 30.7,
       "duration_s": 1.8
     },
     {
@@ -1751,7 +1751,7 @@
       "team": 1,
       "player_id": 9,
       "role": "player",
-      "speed_kmh": 30.8,
+      "speed_kmh": 30.6,
       "duration_s": 2.2
     },
     {
@@ -1761,7 +1761,7 @@
       "team": 1,
       "player_id": 12,
       "role": "player",
-      "speed_kmh": 23.3,
+      "speed_kmh": 23.4,
       "duration_s": 1.0
     },
     {
@@ -1781,7 +1781,7 @@
       "team": 1,
       "player_id": 10,
       "role": "player",
-      "speed_kmh": 31.1,
+      "speed_kmh": 31.2,
       "duration_s": 1.4
     },
     {
@@ -1791,7 +1791,7 @@
       "team": 1,
       "player_id": 22,
       "role": "player",
-      "speed_kmh": 26.0,
+      "speed_kmh": 25.9,
       "duration_s": 1.4
     },
     {
@@ -1801,7 +1801,7 @@
       "team": 1,
       "player_id": 1,
       "role": "player",
-      "speed_kmh": 31.9,
+      "speed_kmh": 31.8,
       "duration_s": 1.2
     },
     {
@@ -1901,7 +1901,7 @@
       "team": 1,
       "player_id": 4,
       "role": "player",
-      "speed_kmh": 35.3,
+      "speed_kmh": 35.1,
       "duration_s": 1.2
     },
     {
@@ -1934,7 +1934,7 @@
       "type": "carry",
       "team": 1,
       "player_id": 16,
-      "distance": 4.57,
+      "distance": 4.62,
       "unit": "m",
       "end_time": 27.12,
       "zone": "final_third"
@@ -1946,7 +1946,7 @@
       "to_player_id": 16,
       "from_team": 1,
       "to_team": 1,
-      "ball_travel": 0.21,
+      "ball_travel": 0.2,
       "unit": "m",
       "gap_s": 0.04,
       "type": "pass",
@@ -1982,7 +1982,7 @@
       "type": "shot_or_clearance",
       "team": 1,
       "player_id": 16,
-      "ball_speed_kmh": 105.6,
+      "ball_speed_kmh": 105.5,
       "role": "player"
     },
     {
@@ -2030,7 +2030,7 @@
       "team": 1,
       "player_id": 26,
       "role": "player",
-      "speed_kmh": 33.2,
+      "speed_kmh": 33.0,
       "duration_s": 1.0
     },
     {
@@ -2039,7 +2039,7 @@
       "type": "shot_or_clearance",
       "team": 1,
       "player_id": 1,
-      "ball_speed_kmh": 100.2,
+      "ball_speed_kmh": 99.9,
       "role": "player"
     },
     {
@@ -2049,7 +2049,7 @@
       "team": 1,
       "player_id": 1,
       "role": "player",
-      "speed_kmh": 35.4,
+      "speed_kmh": 35.3,
       "duration_s": 1.4
     },
     {
