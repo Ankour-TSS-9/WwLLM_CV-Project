@@ -1,20 +1,82 @@
-import { useState, useEffect } from 'react'
-import { generateCommentary } from '@/services/analysisService'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import {
+  createCommentaryVideo,
+  generateCommentary,
+  generateCommentaryAudio,
+  type CommentaryLine,
+} from '@/services/analysisService'
 
-interface CommentaryLine {
-  time: number
-  text: string
-  excitement_level: 'low' | 'medium' | 'high' | 'explosive'
-  target_player_id?: number
-}
-
-export function CommentaryPlayer({ matchId = 'default' }: { matchId?: string }) {
+export function CommentaryPlayer({
+  matchId = 'default',
+  onVideoCreated,
+}: {
+  matchId?: string
+  onVideoCreated?: (videoUrl: string) => void
+}) {
   const [persona, setPersona] = useState<'broadcast' | 'tactical' | 'coach'>('broadcast')
   const [commentary, setCommentary] = useState<CommentaryLine[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [audioLoadingIndex, setAudioLoadingIndex] = useState<number | null>(null)
+  const [activeAudioIndex, setActiveAudioIndex] = useState<number | null>(null)
+  const [audioError, setAudioError] = useState<string | null>(null)
+  const [videoLoading, setVideoLoading] = useState(false)
+  const [videoError, setVideoError] = useState<string | null>(null)
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const audioUrlRef = useRef<string | null>(null)
+  const audioLineIndexRef = useRef<number | null>(null)
 
-  const loadCommentary = async () => {
+  const playCommentaryAudio = async (line: CommentaryLine, index: number) => {
+    setAudioError(null)
+
+    if (audioRef.current && audioLineIndexRef.current === index) {
+      if (!audioRef.current.paused) {
+        audioRef.current.pause()
+        setActiveAudioIndex(null)
+        return
+      }
+
+      try {
+        await audioRef.current.play()
+        setActiveAudioIndex(index)
+      } catch (err) {
+        setAudioError(err instanceof Error ? err.message : 'Could not play commentary audio.')
+      }
+      return
+    }
+
+    setAudioLoadingIndex(index)
+    audioRef.current?.pause()
+    if (audioUrlRef.current) {
+      URL.revokeObjectURL(audioUrlRef.current)
+      audioUrlRef.current = null
+    }
+    audioRef.current = null
+    audioLineIndexRef.current = null
+    setActiveAudioIndex(null)
+
+    try {
+      const audioBlob = await generateCommentaryAudio(matchId, line.text)
+      const audioUrl = URL.createObjectURL(audioBlob)
+      const audio = new Audio(audioUrl)
+      audioUrlRef.current = audioUrl
+      audioRef.current = audio
+      audioLineIndexRef.current = index
+      audio.onended = () => setActiveAudioIndex(null)
+      audio.onerror = () => {
+        setActiveAudioIndex(null)
+        setAudioError('The generated commentary audio could not be played.')
+      }
+      await audio.play()
+      setActiveAudioIndex(index)
+    } catch (err) {
+      setAudioError(err instanceof Error ? err.message : 'Failed to generate commentary audio.')
+    } finally {
+      setAudioLoadingIndex(null)
+    }
+  }
+
+  const loadCommentary = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
@@ -25,21 +87,37 @@ export function CommentaryPlayer({ matchId = 'default' }: { matchId?: string }) 
         '16': 'Player 16',
       })
       
-      if (response?.commentary) {
-        setCommentary(response.commentary)
-      } else {
-        setError('Backend unavailable. Start the backend server to generate real commentary.')
-      }
+      setCommentary(response.commentary)
     } catch (err) {
-      setError('Failed to generate commentary. Make sure the backend is running.')
+      setError(err instanceof Error ? err.message : 'Failed to generate commentary.')
     } finally {
       setLoading(false)
+    }
+  }, [matchId, persona])
+
+  const embedCommentaryInVideo = async () => {
+    setVideoLoading(true)
+    setVideoError(null)
+    try {
+      const videoUrl = await createCommentaryVideo(matchId, commentary)
+      onVideoCreated?.(videoUrl)
+    } catch (err) {
+      setVideoError(err instanceof Error ? err.message : 'Failed to create commentary video.')
+    } finally {
+      setVideoLoading(false)
     }
   }
 
   useEffect(() => {
-    loadCommentary()
-  }, [persona])
+    void loadCommentary()
+  }, [loadCommentary])
+
+  useEffect(() => () => {
+    audioRef.current?.pause()
+    if (audioUrlRef.current) {
+      URL.revokeObjectURL(audioUrlRef.current)
+    }
+  }, [])
 
   const getExcitementColor = (level: string) => {
     switch (level) {
@@ -65,7 +143,9 @@ export function CommentaryPlayer({ matchId = 'default' }: { matchId?: string }) 
       {/* Header */}
       <div className="border-b border-gray-200 bg-gray-50 px-6 py-4">
         <h3 className="text-lg font-semibold text-gray-900">AI Commentary Generator</h3>
-        <p className="text-sm text-gray-600">Select a commentary style and generate narration</p>
+        <p className="text-sm text-gray-600">
+          Generate timestamped match commentary, preview spoken lines, or add narration to the analyzed video.
+        </p>
       </div>
 
       {/* Persona Selector */}
@@ -130,6 +210,18 @@ export function CommentaryPlayer({ matchId = 'default' }: { matchId?: string }) 
           </div>
         )}
 
+        {audioError && (
+          <div className="mb-4 rounded-lg bg-yellow-50 p-4 text-sm text-yellow-800">
+            {audioError}
+          </div>
+        )}
+
+        {videoError && (
+          <div className="mb-4 rounded-lg bg-yellow-50 p-4 text-sm text-yellow-800">
+            {videoError}
+          </div>
+        )}
+
         {!loading && !error && commentary.length === 0 && (
           <div className="py-12 text-center text-gray-500">
             No commentary generated yet. Try selecting a different style.
@@ -142,13 +234,31 @@ export function CommentaryPlayer({ matchId = 'default' }: { matchId?: string }) 
               <p className="text-sm font-medium text-gray-700">
                 {commentary.length} commentary lines
               </p>
-              <button
-                onClick={loadCommentary}
-                className="text-sm text-blue-600 hover:text-blue-700"
-              >
-                Regenerate
-              </button>
+              <div className="flex items-center gap-4">
+                {matchId !== 'default' && (
+                  <button
+                    type="button"
+                    onClick={() => void embedCommentaryInVideo()}
+                    disabled={videoLoading}
+                    className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-wait disabled:opacity-60"
+                  >
+                    {videoLoading ? 'Creating video...' : 'Add voice to video'}
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => void loadCommentary()}
+                  className="text-sm text-blue-600 hover:text-blue-700"
+                >
+                  Regenerate
+                </button>
+              </div>
             </div>
+            {matchId !== 'default' && (
+              <p className="mb-4 text-xs text-gray-500">
+                Creates a downloadable video with narration and the original match audio quieter underneath. Uses ElevenLabs credits.
+              </p>
+            )}
             {commentary.map((line, idx) => (
               <div
                 key={idx}
@@ -163,6 +273,18 @@ export function CommentaryPlayer({ matchId = 'default' }: { matchId?: string }) 
                   </span>
                 </div>
                 <p className="text-sm">{line.text}</p>
+                <button
+                  type="button"
+                  onClick={() => void playCommentaryAudio(line, idx)}
+                  disabled={audioLoadingIndex !== null}
+                  className="mt-3 rounded-md border border-current/20 px-3 py-1.5 text-xs font-semibold hover:bg-black/5 disabled:cursor-wait disabled:opacity-60"
+                >
+                  {audioLoadingIndex === idx
+                    ? 'Generating voice...'
+                    : activeAudioIndex === idx
+                      ? 'Pause voice'
+                      : 'Play voice'}
+                </button>
                 {line.target_player_id && (
                   <p className="mt-1 text-xs opacity-75">
                     Focus: Player {line.target_player_id}

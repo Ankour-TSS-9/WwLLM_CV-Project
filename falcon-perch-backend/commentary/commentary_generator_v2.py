@@ -15,15 +15,159 @@ Set your API key:
 """
 
 import json
+import logging
 import os
 from typing import Literal, Optional
 from groq import Groq
 
+MAX_COMMENTARY_EVENTS_CHARS = 5000
+COMMENTARY_EVENT_FIELDS = (
+    "time",
+    "type",
+    "team",
+    "player_id",
+    "from_player_id",
+    "to_player_id",
+    "progressive",
+    "distance",
+    "speed_kmh",
+    "ball_speed_kmh",
+    "duration_s",
+    "zone",
+    "pressing_team",
+    "n_markers",
+    "end_time",
+)
+PRIORITY_EVENT_TYPES = {
+    "box_entry",
+    "clearance",
+    "pass",
+    "pressure",
+    "shot_or_clearance",
+    "turnover",
+}
+VALID_EXCITEMENT_LEVELS = {"low", "medium", "high", "explosive"}
+EXCITEMENT_LEVEL_ALIASES = {
+    "calm": "low",
+    "routine": "low",
+    "moderate": "medium",
+    "normal": "medium",
+    "very high": "high",
+    "extreme": "explosive",
+    "peak": "explosive",
+}
+
+
+def _normalize_excitement_level(value: object, line_index: int) -> str:
+    if isinstance(value, str):
+        level = value.strip().lower()
+        if level in VALID_EXCITEMENT_LEVELS:
+            return level
+        if level in EXCITEMENT_LEVEL_ALIASES:
+            return EXCITEMENT_LEVEL_ALIASES[level]
+
+    logging.warning(
+        "Groq commentary item %d returned invalid excitement_level %r; "
+        "using 'medium'.",
+        line_index,
+        value,
+    )
+    return "medium"
+
+
+def _compact_commentary_events(events: list[dict]) -> list[dict]:
+    compact_events = []
+    sprint_groups: dict[tuple[int, object], dict] = {}
+
+    for event in events:
+        if not isinstance(event, dict) or event.get("type") == "possession_start":
+            continue
+
+        compact = {}
+        for key in COMMENTARY_EVENT_FIELDS:
+            value = event.get(key)
+            if value is None or (key == "zone" and value == "unknown"):
+                continue
+            if isinstance(value, float):
+                value = round(value, 1)
+            elif isinstance(value, str):
+                value = value[:40]
+            elif not isinstance(value, (str, int, float, bool)):
+                continue
+            compact[key] = value
+
+        if not compact:
+            continue
+
+        if compact.get("type") == "sprint":
+            time_seconds = compact.get("time", 0)
+            team = compact.get("team")
+            bucket = (int(float(time_seconds) // 5), team)
+            group = sprint_groups.get(bucket)
+            if group is None:
+                compact["count"] = 1
+                sprint_groups[bucket] = compact
+            else:
+                group["count"] += 1
+                if compact.get("speed_kmh", 0) > group.get("speed_kmh", 0):
+                    count = group["count"]
+                    group.update(compact)
+                    group["count"] = count
+        else:
+            compact_events.append(compact)
+
+    compact_events.extend(sprint_groups.values())
+    return sorted(compact_events, key=lambda event: event.get("time", 0))
+
+
+def _fit_commentary_events(
+    events: list[dict], clip_duration_seconds: float
+) -> list[dict]:
+    compact_events = _compact_commentary_events(events)
+    if len(json.dumps(compact_events, separators=(",", ":"))) <= MAX_COMMENTARY_EVENTS_CHARS:
+        return compact_events
+
+    priority_events = [
+        event for event in compact_events
+        if event.get("type") in PRIORITY_EVENT_TYPES
+    ]
+    other_events = [
+        event for event in compact_events
+        if event.get("type") not in PRIORITY_EVENT_TYPES
+    ]
+
+    def thin(events_to_thin: list[dict]) -> list[dict]:
+        if len(events_to_thin) == 1:
+            return []
+        if len(events_to_thin) == 2:
+            return events_to_thin[len(events_to_thin) // 2 : len(events_to_thin) // 2 + 1]
+        sampled = events_to_thin[::2]
+        return sampled if sampled[-1] is events_to_thin[-1] else sampled + [events_to_thin[-1]]
+
+    while True:
+        selected = sorted(priority_events + other_events, key=lambda event: event.get("time", 0))
+        if not selected:
+            raise ValueError(
+                "The match contains too many high-priority events to fit the "
+                "commentary model's request limit."
+            )
+        if len(json.dumps(selected, separators=(",", ":"))) <= MAX_COMMENTARY_EVENTS_CHARS:
+            return selected
+
+        if other_events:
+            other_events = thin(other_events)
+        elif priority_events:
+            priority_events = thin(priority_events)
+        else:
+            raise ValueError(
+                "The match contains too many high-priority events to fit the "
+                "commentary model's request limit."
+            )
+
 
 # Persona definitions
 PERSONA_PROMPTS = {
-    "broadcast": """You are an iconic, poetic, highly enthusiastic football commentator 
-in the style of Peter Drury or Ray Hudson. Your commentary is:
+    "broadcast": """You are a poetic, highly enthusiastic football commentator. Your commentary is:
 - Dramatic and emotionally charged
 - Uses vivid metaphors and poetic language
 - Builds tension during attacking plays
@@ -34,8 +178,7 @@ Example style: "And here comes the storm! Number 7 with lightning in his boots,
 cutting through the defense like a hot knife through butter!"
 """,
     
-    "tactical": """You are an elite tactical analyst commentator in the style of 
-Gary Neville or Pep Guardiola. Your commentary focuses on:
+    "tactical": """You are an elite tactical analyst commentator. Your commentary focuses on:
 - Spatial organization and team shape
 - Pressing triggers and defensive compactness
 - Passing lane availability and progressive actions
@@ -113,11 +256,15 @@ EXCITEMENT CALIBRATION:
 - medium: Progressive actions, sprints, pressure (moderate energy)
 - high: Box entries, shots, dangerous moments (elevated intensity)
 - explosive: Goals, brilliant skills, dramatic turnarounds (peak emotion)
+- The excitement_level value must be exactly one of: low, medium, high, explosive.
 
 RULES:
 - Keep lines short (2-4 seconds of speech, 8-20 words)
 - Don't narrate every event - combine nearby actions into natural sentences
 - Leave gaps where nothing significant happens
+- Cover distinct important sequences throughout the clip; for a 30-second clip, aim for 5-10 lines when the events support it
+- Never replace available match events with a generic opening or filler line
+- Describe only actions supported by the supplied events; do not infer goals, outcomes, or player identities
 - Use player names when available, numbers when not
 - Match excitement_level to the action's importance
 - For 'tactical' persona: Explain the 'why' behind actions
@@ -125,12 +272,14 @@ RULES:
 """
 
     # Build user content
+    if not events:
+        return []
+
     user_content = {
         "clip_duration_seconds": round(clip_duration_seconds, 2),
-        "events": events,
+        "events": _fit_commentary_events(events, clip_duration_seconds),
     }
 
-    # Call Groq with error handling
     try:
         client = Groq(api_key=api_key or os.environ.get("GROQ_API_KEY"))
         
@@ -143,14 +292,22 @@ RULES:
                 },
                 {
                     "role": "user",
-                    "content": f"Generate commentary for these match events:\n\n{json.dumps(user_content, indent=2)}",
+                    "content": (
+                        "Generate commentary for these match events. Sprint entries "
+                        "with count greater than one summarize multiple sprints in "
+                        "the same short period; do not attribute the group to one player.\n\n"
+                        f"{json.dumps(user_content, separators=(',', ':'), ensure_ascii=False)}"
+                    ),
                 },
             ],
             temperature=0.8 if persona == "broadcast" else 0.6,
             max_tokens=2000,
         )
 
-        raw_text = response.choices[0].message.content.strip()
+        raw_text = response.choices[0].message.content
+        if not raw_text:
+            raise ValueError("Groq returned an empty commentary response")
+        raw_text = raw_text.strip()
 
         # Try to extract JSON if wrapped in markdown
         if raw_text.startswith("```"):
@@ -160,22 +317,27 @@ RULES:
             raw_text = raw_text.rsplit("```")[0].strip()
 
         lines = json.loads(raw_text)
+        if isinstance(lines, dict) and isinstance(lines.get("commentary"), list):
+            lines = lines["commentary"]
         if not isinstance(lines, list):
-            lines = [lines]
+            raise ValueError("Groq commentary response must be a JSON array")
+
+        for index, line in enumerate(lines, start=1):
+            if not isinstance(line, dict):
+                raise ValueError("Groq commentary items must be JSON objects")
+            if not isinstance(line.get("time"), (int, float)):
+                raise ValueError("Groq commentary items must include a numeric time")
+            if not isinstance(line.get("text"), str) or not line["text"].strip():
+                raise ValueError("Groq commentary items must include non-empty text")
+            line["excitement_level"] = _normalize_excitement_level(
+                line.get("excitement_level"), index
+            )
+
         lines.sort(key=lambda x: x.get("time", 0))
 
         return lines
     except Exception as e:
-        print(f"Error generating commentary: {e}")
-        # Return fallback commentary
-        return [
-            {
-                "time": 0.0,
-                "text": "Watch the match unfold with precision and skill.",
-                "excitement_level": "medium",
-                "target_player_id": None
-            }
-        ]
+        raise RuntimeError(f"Groq commentary generation failed: {e}") from e
 
 
 if __name__ == "__main__":

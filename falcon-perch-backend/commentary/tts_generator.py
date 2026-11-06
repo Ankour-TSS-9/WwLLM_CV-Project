@@ -46,6 +46,18 @@ def _client() -> ElevenLabs:
     return ElevenLabs(api_key=api_key)
 
 
+def generate_audio_bytes(text: str, voice_id: str = VOICE_ID) -> bytes:
+    """Generate one commentary line as MP3 bytes without writing it to disk."""
+    client = _client()
+    audio = client.text_to_speech.convert(
+        voice_id=voice_id,
+        model_id=MODEL_ID,
+        text=text,
+        voice_settings=VOICE_SETTINGS,
+    )
+    return b"".join(audio)
+
+
 def generate_audio_clips(
     commentary: list[dict],
     output_dir: str,

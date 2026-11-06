@@ -2,7 +2,12 @@ import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { MatchChat } from '@/components/MatchChat'
 import { CommentaryPlayer } from '@/components/CommentaryPlayer'
-import { analyze } from '@/services/analysisService'
+import {
+  API_BASE_URL,
+  analyze,
+  getMatchStats,
+  uploadVideo,
+} from '@/services/analysisService'
 import type { AnalysisRecord } from '@/types'
 import { SPORTS, type Sport } from '@/types'
 import { getSportTheme } from '@/theme/sportThemes'
@@ -19,6 +24,7 @@ export function AIFeaturesDemo() {
   const [matchId, setMatchId] = useState<string>('default')
   const [uploadLoading, setUploadLoading] = useState(false)
   const [uploadStatus, setUploadStatus] = useState<string>('')
+  const [videoUrl, setVideoUrl] = useState<string | null>(null)
   const [players, setPlayers] = useState<Array<{ id: number; name: string; team: number; role: string }>>([
     { id: 1, name: 'Player 1', team: 1, role: 'Attacker' },
     { id: 12, name: 'Player 12', team: 1, role: 'Midfielder' },
@@ -57,20 +63,21 @@ export function AIFeaturesDemo() {
   // Fetch players from match data
   const fetchPlayersFromMatch = async (id: string) => {
     try {
-      const response = await fetch(`http://localhost:8000/api/match/${id}/stats`)
-      if (response.ok) {
-        const data = await response.json()
-        const matchPlayers = data.stats?.players || []
-        const playerList = matchPlayers.map((p: { player_id: number; team: number; role?: string }) => ({
-          id: p.player_id,
-          name: `Player ${p.player_id}`,
-          team: p.team,
-          role: p.role || 'Player',
-        }))
-        if (playerList.length > 0) {
-          setPlayers(playerList)
-          setSelectedPlayer(playerList[0].id)
-        }
+      const data = await getMatchStats(id)
+      const matchPlayers = data?.stats?.players || []
+      const playerList = matchPlayers.map((player: {
+        player_id: number
+        team: number
+        role?: string
+      }) => ({
+        id: player.player_id,
+        name: `Player ${player.player_id}`,
+        team: player.team,
+        role: player.role || 'Player',
+      }))
+      if (playerList.length > 0) {
+        setPlayers(playerList)
+        setSelectedPlayer(playerList[0].id)
       }
     } catch (error) {
       console.error('Failed to fetch players:', error)
@@ -81,20 +88,13 @@ export function AIFeaturesDemo() {
     const file = event.target.files?.[0]
     if (!file) return
     setUploadLoading(true)
+    setVideoUrl(null)
     setUploadStatus('Uploading video...')
     try {
-      const formData = new FormData()
-      formData.append('file', file)
-      const response = await fetch('http://localhost:8000/api/upload-video', {
-        method: 'POST',
-        body: formData,
-      })
-      if (!response.ok) {
-        const error = await response.json()
-        throw new Error(error.detail || 'Upload failed')
-      }
-      const data = await response.json()
+      setUploadStatus('Uploading and running the CV pipeline...')
+      const data = await uploadVideo(file)
       setMatchId(data.match_id)
+      setVideoUrl(new URL(data.video_url, API_BASE_URL).toString())
       setUploadStatus(`✅ Video processed! Match ID: ${data.match_id}`)
       setReport(null)
       await fetchPlayersFromMatch(data.match_id)
@@ -413,6 +413,41 @@ export function AIFeaturesDemo() {
                 )}
               </div>
 
+              {videoUrl && (
+                <div
+                  className="mb-6 rounded-3xl p-6 border backdrop-blur-md shadow-xl"
+                  style={{
+                    background: 'linear-gradient(145deg, rgba(0,0,0,0.5), rgba(15,23,42,0.75))',
+                    borderColor: activeTheme.borderColor,
+                    boxShadow: `0 15px 35px -10px ${activeTheme.glowColor}`,
+                  }}
+                >
+                  <h3
+                    className="text-xl font-black text-white uppercase tracking-wide mb-4"
+                    style={{ fontFamily: "'Anton', 'Bebas Neue', sans-serif" }}
+                  >
+                    {videoUrl.includes('commentary-video') ? 'Annotated Video with Commentary' : 'Annotated CV Video'}
+                  </h3>
+                  <video
+                    key={videoUrl}
+                    className="w-full rounded-xl bg-black"
+                    src={videoUrl}
+                    controls
+                    playsInline
+                    preload="metadata"
+                  >
+                    Your browser does not support HTML video.
+                  </video>
+                  <a
+                    className="mt-3 inline-block text-sm font-medium text-white underline"
+                    href={videoUrl}
+                    download
+                  >
+                    {videoUrl.includes('commentary-video') ? 'Download video with commentary' : 'Download annotated video'}
+                  </a>
+                </div>
+              )}
+
               {/* Player Selection Card */}
               <div
                 className="rounded-3xl p-6 border backdrop-blur-md shadow-xl"
@@ -715,7 +750,10 @@ export function AIFeaturesDemo() {
                 </h3>
               </div>
               <div className="p-6">
-                <CommentaryPlayer />
+                <CommentaryPlayer
+                  matchId={matchId}
+                  onVideoCreated={setVideoUrl}
+                />
               </div>
             </div>
           )}

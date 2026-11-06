@@ -4,7 +4,7 @@ opencv-python==4.12.0.88
 pandas==3.1.0
 protobuf==7.36.2
 scikit_learn==1.9.1
-supervision==0.31.2
+supervision==0.27.0
 ultralytics==8.4.189
 
 # LLM & API Server

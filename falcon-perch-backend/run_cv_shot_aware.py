@@ -59,7 +59,14 @@ def _json_default(obj):
     raise TypeError(f"Not serializable: {type(obj)}")
 
 
-def run(video_path, model_path, read_from_stub, skip_video, shot_aware=True):
+def run(
+    video_path,
+    model_path,
+    read_from_stub,
+    skip_video,
+    shot_aware=True,
+    output_video_path="output_videos/cv_output_shot_aware.avi",
+):
     if not os.path.exists(video_path):
         raise FileNotFoundError(
             f"Video not found: {video_path}. Put a clip in input_videos/ or pass --video."
@@ -148,10 +155,15 @@ def run(video_path, model_path, read_from_stub, skip_video, shot_aware=True):
 
     tracker = ImprovedTracker(model_path)
     print("\n=== OBJECT DETECTION & TRACKING ===")
-    # F2: Apply configured inference resolution
-    _imgsz = config.INFERENCE_IMGSZ
-    if _imgsz != 640:
-        print(f"  Inference resolution: {_imgsz} (F2 flag)")
+    # F2: Use the configured resolution unless the deployment overrides it.
+    configured_imgsz = os.environ.get("CV_PIPELINE_IMGSZ")
+    try:
+        _imgsz = int(configured_imgsz) if configured_imgsz else config.INFERENCE_IMGSZ
+    except ValueError as e:
+        raise ValueError("CV_PIPELINE_IMGSZ must be a positive integer") from e
+    if _imgsz <= 0:
+        raise ValueError("CV_PIPELINE_IMGSZ must be a positive integer")
+    print(f"  Inference resolution: {_imgsz}")
     # Temporarily patch config so ImprovedTracker.detect_frames uses it
     tracker._imgsz_override = _imgsz
     tracks = tracker.get_object_tracks(
@@ -428,8 +440,11 @@ def run(video_path, model_path, read_from_stub, skip_video, shot_aware=True):
         output_frames = camera_estimator.draw_camera_movement(output_frames, camera)
         output_frames = speed_estimator.draw_speed_and_distance(output_frames, tracks)
     
-    save_video(output_frames, "output_videos/cv_output_shot_aware.avi", fps=fps)
-    print("Wrote output_videos/cv_output_shot_aware.avi")
+    output_video_dir = os.path.dirname(output_video_path)
+    if output_video_dir:
+        os.makedirs(output_video_dir, exist_ok=True)
+    save_video(output_frames, output_video_path, fps=fps)
+    print(f"Wrote {output_video_path}")
     return stats
 
 
@@ -448,6 +463,11 @@ def main():
         help="Write JSON stats only, skip annotated video",
     )
     parser.add_argument(
+        "--output-video",
+        default="output_videos/cv_output_shot_aware.avi",
+        help="Path for the rendered annotated video",
+    )
+    parser.add_argument(
         "--no-shot-detection",
         action="store_true",
         help="Disable shot detection (use standard pipeline)",
@@ -459,6 +479,7 @@ def main():
         read_from_stub=not args.no_stub,
         skip_video=args.skip_video,
         shot_aware=not args.no_shot_detection,
+        output_video_path=args.output_video,
     )
 
 

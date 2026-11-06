@@ -33,6 +33,17 @@ def _get_audio_duration(path: str) -> float:
     return float(info["format"]["duration"])
 
 
+def _has_audio_stream(path: str) -> bool:
+    result = subprocess.run(
+        [
+            "ffprobe", "-v", "error", "-select_streams", "a",
+            "-show_entries", "stream=index", "-of", "csv=p=0", path,
+        ],
+        capture_output=True, text=True, check=True,
+    )
+    return bool(result.stdout.strip())
+
+
 def resolve_overlaps(audio_clips: list[dict], min_gap: float = 0.15) -> list[dict]:
     """
     Commentary timestamps come from the LLM, which doesn't know how long each
@@ -90,7 +101,7 @@ def merge_commentary_into_video(
         mix_inputs.append(f"[{label}]")
         input_index += 1
 
-    if original_audio_path:
+    if original_audio_path and _has_audio_stream(original_audio_path):
         inputs += ["-i", original_audio_path]
         filter_parts.append(
             f"[{input_index}:a]volume={original_audio_volume}[orig]"

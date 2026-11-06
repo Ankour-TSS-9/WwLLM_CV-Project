@@ -4,7 +4,41 @@ import type { AnalysisRecord, AnalyzeInput, AnalysisResult } from '../types'
 
 const ANALYSES_KEY = 'falcon-perch.analyses'
 const COUNT_KEY = 'falcon-perch.analysis-count'
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+export const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+
+export interface VideoUploadResponse {
+  match_id: string
+  video_url: string
+}
+
+export async function uploadVideo(file: File): Promise<VideoUploadResponse> {
+  const formData = new FormData()
+  formData.append('file', file)
+
+  const response = await fetch(`${API_BASE_URL}/api/upload-video`, {
+    method: 'POST',
+    body: formData,
+  })
+  const data: unknown = await response.json()
+  const payload = typeof data === 'object' && data !== null ? data : {}
+
+  if (!response.ok) {
+    const detail = 'detail' in payload && typeof payload.detail === 'string'
+      ? payload.detail
+      : 'Video upload failed'
+    throw new Error(detail)
+  }
+  if (
+    !('video_url' in payload)
+    || typeof payload.video_url !== 'string'
+    || !('match_id' in payload)
+    || typeof payload.match_id !== 'string'
+  ) {
+    throw new Error('Backend response did not include the processed video URL')
+  }
+
+  return { match_id: payload.match_id, video_url: payload.video_url }
+}
 
 export class FreeAnalysisLimitError extends Error {
   constructor() {
@@ -110,38 +144,139 @@ export async function getMatchStats(matchId: string = 'default') {
 /**
  * Generate commentary with selected persona
  */
+export interface CommentaryLine {
+ time: number
+ text: string
+ excitement_level: 'low' | 'medium' | 'high' | 'explosive'
+ target_player_id?: number | null
+}
+
+export interface CommentaryResponse {
+ commentary: CommentaryLine[]
+}
+
+function isCommentaryLine(line: unknown): line is CommentaryLine {
+ if (typeof line !== 'object' || line === null) {
+   return false
+ }
+
+ return (
+   'time' in line &&
+   typeof line.time === 'number' &&
+   'text' in line &&
+   typeof line.text === 'string' &&
+   'excitement_level' in line &&
+   (
+     line.excitement_level === 'low' ||
+     line.excitement_level === 'medium' ||
+     line.excitement_level === 'high' ||
+     line.excitement_level === 'explosive'
+   ) &&
+   (!('target_player_id' in line) ||
+     line.target_player_id === null ||
+     typeof line.target_player_id === 'number')
+ )
+}
+
 export async function generateCommentary(
-  matchId: string = 'default',
-  persona: 'broadcast' | 'tactical' | 'coach' = 'broadcast',
-  playerNames?: Record<string, string>,
-  teamNames?: Record<string, string>
-) {
-  try {
-    const response = await fetch(
-      `${API_BASE_URL}/api/match/${matchId}/commentary`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          persona,
-          player_names: playerNames,
-          team_names: teamNames,
-          language: 'english',
-        }),
-      }
-    )
-
-    if (!response.ok) {
-      throw new Error(`Backend error: ${response.status}`)
+ matchId: string = 'default',
+ persona: 'broadcast' | 'tactical' | 'coach' = 'broadcast',
+ playerNames?: Record<string, string>,
+ teamNames?: Record<string, string>
+): Promise<CommentaryResponse> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/match/${matchId}/commentary`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        persona,
+        player_names: playerNames,
+        team_names: teamNames,
+        language: 'english',
+      }),
     }
+  )
 
-    return await response.json()
-  } catch (error) {
-    console.error('Failed to generate commentary:', error)
-    return null
+  const data: unknown = await response.json()
+  const payload = typeof data === 'object' && data !== null ? data : {}
+
+  if (!response.ok) {
+    const detail = 'detail' in payload && typeof payload.detail === 'string'
+      ? payload.detail
+      : `Commentary request failed (${response.status})`
+    throw new Error(detail)
   }
+
+  if (
+    !('commentary' in payload) ||
+    !Array.isArray(payload.commentary) ||
+    !payload.commentary.every(isCommentaryLine)
+  ) {
+    throw new Error('The backend returned an invalid commentary response.')
+  }
+
+  return { commentary: payload.commentary }
+}
+
+export async function generateCommentaryAudio(
+  matchId: string,
+  text: string
+): Promise<Blob> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/match/${matchId}/commentary/audio`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ text }),
+    }
+  )
+
+  if (!response.ok) {
+    const data: unknown = await response.json()
+    const payload = typeof data === 'object' && data !== null ? data : {}
+    const detail = 'detail' in payload && typeof payload.detail === 'string'
+      ? payload.detail
+      : `Commentary audio request failed (${response.status})`
+    throw new Error(detail)
+  }
+
+  return response.blob()
+}
+
+export async function createCommentaryVideo(
+  matchId: string,
+  commentary: CommentaryLine[]
+): Promise<string> {
+  const response = await fetch(
+    `${API_BASE_URL}/api/match/${matchId}/commentary/video`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ commentary }),
+    }
+  )
+
+  const data: unknown = await response.json()
+  const payload = typeof data === 'object' && data !== null ? data : {}
+
+  if (!response.ok) {
+    const detail = 'detail' in payload && typeof payload.detail === 'string'
+      ? payload.detail
+      : `Commentary video request failed (${response.status})`
+    throw new Error(detail)
+  }
+  if (!('video_url' in payload) || typeof payload.video_url !== 'string') {
+    throw new Error('Backend response did not include the commentary video URL')
+  }
+
+  return new URL(payload.video_url, API_BASE_URL).toString()
 }
 
 /**

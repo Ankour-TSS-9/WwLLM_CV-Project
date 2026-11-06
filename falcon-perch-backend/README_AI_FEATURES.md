@@ -87,6 +87,8 @@ Content-Type: application/json
 }
 ```
 
+For uploaded matches, the frontend can also synthesize these lines into the annotated video. `POST /api/match/{match_id}/commentary/video` accepts the `commentary` array, and `GET /api/match/{match_id}/commentary-video` serves the resulting MP4. This requires `ELEVENLABS_API_KEY` and FFmpeg; source match audio is mixed underneath the narration at reduced volume.
+
 ### 3. **Match Chat Agent** (`chat/match_agent.py`)
 Conversational Q&A system using RAG over match telemetry.
 
@@ -122,27 +124,32 @@ REST API server connecting CV pipeline to React frontend.
 - `GET /api/match/{id}/stats` - Match statistics
 - `POST /api/match/{id}/coach` - AI coach report
 - `POST /api/match/{id}/commentary` - Generate commentary
+- `POST /api/match/{id}/commentary/audio` - Generate a spoken commentary line
+- `POST /api/match/{id}/commentary/video` - Render commentary into an uploaded match video
+- `GET /api/match/{id}/commentary-video` - Stream the rendered commentary video
 - `POST /api/match/{id}/chat` - Match Q&A
-- `POST /api/upload-video` - Video upload (placeholder)
+- `POST /api/upload-video` - Process an uploaded video and return match stats and a video URL
+- `GET /api/match/{id}/video` - Stream the annotated MP4 for an uploaded match
 - `GET /api/players` - List all players
 
 ## 📦 Installation
 
 ### Backend Setup
 
-1. **Install Python dependencies:**
+1. **Create the Python environment and install dependencies:**
 ```bash
 cd falcon-perch-backend
-pip install -r requirements.txt
+py -3.12 -m venv venv
+venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
 2. **Set up environment variables:**
 ```bash
-cp .env.example .env
-# Edit .env and add your GEMINI_API_KEY
+copy .env.example .env
+# Edit .env and add your GROQ_API_KEY
 ```
 
-Get a free Gemini API key at: https://aistudio.google.com/apikey
+Get a Groq API key at: https://console.groq.com/keys
 
 3. **Verify data files exist:**
 ```bash
@@ -161,8 +168,10 @@ cp .env.example .env
 
 2. **Install dependencies** (if not already done):
 ```bash
-npm install
+npm ci
 ```
+
+The backend renders an annotated AVI for each upload, converts it to a browser-playable H.264 MP4 with FFmpeg/libx264, and returns `video_url` in the upload response. The AI Features page embeds the video after processing; the source match audio is not included.
 
 ## 🧪 Testing
 
@@ -279,8 +288,8 @@ curl -X POST http://localhost:8000/api/match/default/chat \
 │ /commentary  │                │
 │ /chat        │                ▼
 └──────┬───────┘      ┌──────────────────┐
-       │              │ Gemini API       │
-       │              │ (LLM Engine)     │
+       │              │ Groq API         │
+       │              │ (commentary)     │
        ▼              └──────────────────┘
 ┌──────────────────────────────┐
 │ React Frontend               │
@@ -314,8 +323,8 @@ const answer = await chatWithMatch("Who scored?", matchId)
 
 **Backend** (`.env`):
 ```env
-GEMINI_API_KEY=your_key_here
-ELEVENLABS_API_KEY=your_key_here  # Optional, for TTS
+GROQ_API_KEY=your_key_here       # Commentary endpoint
+GEMINI_API_KEY=your_key_here     # Other/standalone AI modules, if used
 PORT=8000
 ```
 
@@ -327,15 +336,13 @@ VITE_ENABLE_AI_COACH=true
 
 ### Model Configuration
 
-Edit `server.py` or pass parameters to change:
-- **Model**: `gemini-2.0-flash-exp` (default) or `gemini-3.6-flash`
-- **Temperature**: 0.7 (balance creativity & consistency)
+The app's commentary endpoint uses Groq's `llama-3.3-70b-versatile` model. Set `GROQ_API_KEY` in the backend `.env` file. Other standalone modules may use Gemini separately.
 
 ## 📊 Data Flow
 
 1. **Video Upload** → CV Pipeline → `match_stats.json` + `events.json`
 2. **Player Analysis Request** → AI Coach → LLM Analysis → `AnalysisResult`
-3. **Commentary Request** → Commentary Generator → Persona-specific lines → Audio TTS
+3. **Commentary Request** → Groq Commentary Generator → Timestamped persona-specific text lines
 4. **Chat Question** → Match Agent → Function calls → Natural answer
 
 ## 🔮 Future Enhancements
@@ -356,9 +363,9 @@ cd falcon-perch-backend
 export PYTHONPATH="${PYTHONPATH}:$(pwd)"
 ```
 
-**"GEMINI_API_KEY not found":**
+**"GROQ_API_KEY not found" or commentary generation failed:**
 ```bash
-export GEMINI_API_KEY="your-key-here"
+export GROQ_API_KEY="your-key-here"
 ```
 
 **Backend not connecting:**
@@ -372,7 +379,7 @@ export GEMINI_API_KEY="your-key-here"
 
 ## 📚 Resources
 
-- Gemini API Docs: https://ai.google.dev/docs
+- Groq API Docs: https://console.groq.com/docs
 - FastAPI Docs: https://fastapi.tiangolo.com
 - React Query (optional): For better API state management
 

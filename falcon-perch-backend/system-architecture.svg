@@ -1,0 +1,224 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1120" viewBox="0 0 1600 1120" role="img" aria-labelledby="title description">
+  <title id="title">Falcon Perch end-to-end system architecture</title>
+  <desc id="description">A pictorial overview of the React web app, FastAPI backend, CV subprocess, local file storage, Groq language model requests, annotated video, match statistics, and timestamped text commentary.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#081426"/>
+      <stop offset="1" stop-color="#111e35"/>
+    </linearGradient>
+    <linearGradient id="header" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#22d3ee"/>
+      <stop offset="1" stop-color="#818cf8"/>
+    </linearGradient>
+    <marker id="arrow-cyan" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0 0L12 6L0 12Z" fill="#22d3ee"/>
+    </marker>
+    <marker id="arrow-violet" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0 0L12 6L0 12Z" fill="#a78bfa"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0 0L12 6L0 12Z" fill="#34d399"/>
+    </marker>
+    <marker id="arrow-muted" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M0 0L12 6L0 12Z" fill="#8293ad"/>
+    </marker>
+    <style>
+      text { font-family: "Segoe UI", Arial, sans-serif; }
+      .title { font-size: 34px; font-weight: 750; fill: #f8fafc; letter-spacing: .3px; }
+      .subtitle { font-size: 16px; fill: #a9bad1; }
+      .section { font-size: 16px; font-weight: 700; fill: #cbd5e1; letter-spacing: 1.5px; }
+      .card { fill: #14233b; stroke: #2b3d58; stroke-width: 1.5; }
+      .card-title { font-size: 19px; font-weight: 700; fill: #f1f5f9; }
+      .body { font-size: 14px; fill: #bdcbe0; }
+      .small { font-size: 12px; fill: #91a4bf; }
+      .tag { font-size: 12px; font-weight: 700; letter-spacing: .7px; }
+      .number { font-size: 13px; font-weight: 800; fill: #071426; text-anchor: middle; }
+      .flow { fill: none; stroke-width: 3; }
+      .flow-label { font-size: 12px; font-weight: 650; fill: #d6e5f7; }
+      .bullet { fill: #22d3ee; }
+      .soft-line { stroke: #31435e; stroke-width: 1; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1120" rx="26" fill="url(#background)"/>
+  <path d="M48 108H1552" stroke="url(#header)" stroke-width="3" opacity=".8"/>
+  <text class="title" x="64" y="58">FALCON PERCH</text>
+  <text class="subtitle" x="65" y="86">End-to-end architecture · video upload → computer vision → match insights → AI text</text>
+  <rect x="1324" y="37" width="228" height="34" rx="17" fill="#102c3e" stroke="#1b7184"/>
+  <circle cx="1345" cy="54" r="5" fill="#34d399"/>
+  <text class="tag" x="1360" y="58" fill="#a7f3d0">LOCAL FILE-BASED APP</text>
+
+  <text class="section" x="64" y="142">1 · UPLOAD AND COMPUTER-VISION PROCESSING</text>
+
+  <!-- Browser frontend -->
+  <rect class="card" x="54" y="164" width="328" height="390" rx="18"/>
+  <rect x="54" y="164" width="328" height="7" rx="4" fill="#38bdf8"/>
+  <circle cx="85" cy="202" r="16" fill="#123a55"/>
+  <rect x="76" y="193" width="18" height="17" rx="3" fill="none" stroke="#7dd3fc" stroke-width="2"/>
+  <path d="M78 207l5-5 4 4 3-3 3 4" fill="none" stroke="#7dd3fc" stroke-width="1.5"/>
+  <text class="card-title" x="112" y="208">React + Vite web app</text>
+  <text class="small" x="78" y="244">BROWSER · falcon-perch/src</text>
+  <line class="soft-line" x1="78" y1="262" x2="358" y2="262"/>
+
+  <circle cx="84" cy="292" r="12" fill="#38bdf8"/><text class="number" x="84" y="297">1</text>
+  <text class="body" x="108" y="290">User selects and uploads a video</text>
+  <text class="small" x="108" y="309">multipart/form-data · match ID returned</text>
+  <circle cx="84" cy="349" r="12" fill="#38bdf8"/><text class="number" x="84" y="354">2</text>
+  <text class="body" x="108" y="347">Player and match views</text>
+  <text class="small" x="108" y="366">stats · annotated video · coach · chat</text>
+  <circle cx="84" cy="406" r="12" fill="#38bdf8"/><text class="number" x="84" y="411">3</text>
+  <text class="body" x="108" y="404">Commentary panel</text>
+  <text class="small" x="108" y="423">timestamped text lines · selected persona</text>
+  <rect x="78" y="458" width="280" height="68" rx="12" fill="#102c3e" stroke="#20536a"/>
+  <text class="tag" x="94" y="482" fill="#7dd3fc">VIDEO PLAYER</text>
+  <text class="small" x="94" y="503">Loads the generated MP4 from the API</text>
+
+  <!-- API backend -->
+  <rect class="card" x="426" y="164" width="366" height="390" rx="18"/>
+  <rect x="426" y="164" width="366" height="7" rx="4" fill="#a78bfa"/>
+  <circle cx="458" cy="202" r="16" fill="#35295c"/>
+  <path d="M450 197h16M450 202h12M450 207h16" stroke="#c4b5fd" stroke-width="2" stroke-linecap="round"/>
+  <text class="card-title" x="485" y="208">FastAPI backend</text>
+  <text class="small" x="450" y="244">PYTHON API · falcon-perch-backend/server.py</text>
+  <line class="soft-line" x1="450" y1="262" x2="768" y2="262"/>
+  <text class="body" x="450" y="291">POST  /api/upload-video</text>
+  <text class="small" x="450" y="311">save upload · run CV child process on threadpool</text>
+  <text class="body" x="450" y="347">GET   /api/match/{id}/stats · /video</text>
+  <text class="small" x="450" y="367">load match JSON · stream browser MP4</text>
+  <text class="body" x="450" y="403">POST  /coach · /chat · /commentary</text>
+  <text class="small" x="450" y="423">read match context · call Groq when requested</text>
+  <rect x="450" y="458" width="318" height="68" rx="12" fill="#211e43" stroke="#51438b"/>
+  <text class="tag" x="466" y="482" fill="#c4b5fd">SERVER-ONLY CONFIG</text>
+  <text class="small" x="466" y="503">GROQ_API_KEY stays in backend .env</text>
+
+  <!-- CV child process -->
+  <rect class="card" x="836" y="164" width="420" height="390" rx="18"/>
+  <rect x="836" y="164" width="420" height="7" rx="4" fill="#34d399"/>
+  <circle cx="868" cy="202" r="16" fill="#124838"/>
+  <circle cx="868" cy="202" r="8" fill="none" stroke="#6ee7b7" stroke-width="2"/>
+  <path d="M868 190v5M868 209v5M856 202h5M875 202h5" stroke="#6ee7b7" stroke-width="2"/>
+  <text class="card-title" x="895" y="208">CV child process</text>
+  <text class="small" x="860" y="244">run_cv_shot_aware.py · local YOLO weights</text>
+  <line class="soft-line" x1="860" y1="262" x2="1232" y2="262"/>
+
+  <rect x="860" y="278" width="174" height="72" rx="11" fill="#102d3a" stroke="#23647a"/>
+  <text class="tag" x="876" y="301" fill="#67e8f9">DETECT</text>
+  <text class="small" x="876" y="322">OpenCV frames · shot cuts</text>
+  <text class="small" x="876" y="339">YOLO players / ball</text>
+  <rect x="1048" y="278" width="184" height="72" rx="11" fill="#102d3a" stroke="#23647a"/>
+  <text class="tag" x="1064" y="301" fill="#67e8f9">TRACK + MAP</text>
+  <text class="small" x="1064" y="322">ByteTrack · temporal ball</text>
+  <text class="small" x="1064" y="339">camera · teams · pitch</text>
+  <path d="M1034 314h11" class="flow" stroke="#22d3ee" marker-end="url(#arrow-cyan)"/>
+  <rect x="860" y="366" width="372" height="61" rx="11" fill="#143a35" stroke="#287a5b"/>
+  <text class="tag" x="876" y="390" fill="#6ee7b7">ANALYZE</text>
+  <text class="small" x="876" y="412">speed · distance · possession · events · match stats</text>
+  <rect x="860" y="443" width="372" height="83" rx="11" fill="#143a35" stroke="#287a5b"/>
+  <text class="tag" x="876" y="467" fill="#6ee7b7">RENDER</text>
+  <text class="small" x="876" y="488">annotated AVI → FFmpeg/libx264 → MP4</text>
+  <text class="small" x="876" y="508">CPU inference can take minutes; timeout is configurable</text>
+
+  <!-- Local storage -->
+  <rect class="card" x="1300" y="164" width="246" height="390" rx="18"/>
+  <rect x="1300" y="164" width="246" height="7" rx="4" fill="#fbbf24"/>
+  <circle cx="1332" cy="202" r="16" fill="#51401c"/>
+  <ellipse cx="1332" cy="196" rx="9" ry="4" fill="none" stroke="#fde68a" stroke-width="2"/>
+  <path d="M1323 196v12c0 5 18 5 18 0v-12M1323 202c0 5 18 5 18 0" fill="none" stroke="#fde68a" stroke-width="1.5"/>
+  <text class="card-title" x="1359" y="208">Local files</text>
+  <text class="small" x="1324" y="244">BACKEND DISK · not a database</text>
+  <line class="soft-line" x1="1324" y1="262" x2="1522" y2="262"/>
+  <text class="tag" x="1324" y="290" fill="#fcd34d">INPUT</text>
+  <text class="small" x="1324" y="310">input_videos/</text>
+  <text class="tag" x="1324" y="344" fill="#fcd34d">MATCH DATA</text>
+  <text class="small" x="1324" y="364">stats/*_events.json</text>
+  <text class="small" x="1324" y="382">stats/*_match_stats.json</text>
+  <text class="tag" x="1324" y="416" fill="#fcd34d">VIDEO + CACHE</text>
+  <text class="small" x="1324" y="436">output_videos/*.mp4</text>
+  <text class="small" x="1324" y="454">stubs/*.pkl · shots.json</text>
+  <rect x="1324" y="475" width="198" height="51" rx="9" fill="#432b22" stroke="#80543a"/>
+  <text class="small" x="1337" y="496" fill="#fed7aa">Shared CV intermediate files:</text>
+  <text class="small" x="1337" y="513" fill="#fed7aa">avoid simultaneous uploads</text>
+
+  <!-- Mainline arrows -->
+  <path d="M382 328H420" class="flow" stroke="#22d3ee" marker-end="url(#arrow-cyan)"/>
+  <rect x="372" y="292" width="70" height="24" rx="12" fill="#10253b"/>
+  <text class="flow-label" x="407" y="308" text-anchor="middle">upload</text>
+  <path d="M792 328H830" class="flow" stroke="#22d3ee" marker-end="url(#arrow-cyan)"/>
+  <rect x="783" y="292" width="62" height="24" rx="12" fill="#10253b"/>
+  <text class="flow-label" x="814" y="308" text-anchor="middle">spawn</text>
+  <path d="M1256 328H1292" class="flow" stroke="#34d399" marker-end="url(#arrow-green)"/>
+  <rect x="1243" y="292" width="72" height="24" rx="12" fill="#10253b"/>
+  <text class="flow-label" x="1279" y="308" text-anchor="middle">write</text>
+
+  <rect x="54" y="578" width="1492" height="1" fill="#31435e"/>
+  <text class="section" x="64" y="620">2 · MATCH OUTPUTS AND ON-DEMAND AI</text>
+  <text class="small" x="64" y="646">These requests happen after CV processing. AI calls are separate from video inference.</text>
+
+  <!-- Match data source -->
+  <rect class="card" x="78" y="682" width="322" height="220" rx="18"/>
+  <rect x="78" y="682" width="322" height="6" rx="3" fill="#fbbf24"/>
+  <text class="card-title" x="102" y="724">Per-match data</text>
+  <text class="body" x="102" y="757">stats + events JSON</text>
+  <text class="small" x="102" y="780">Unique upload ID names the files and MP4</text>
+  <text class="body" x="102" y="818">Annotated video</text>
+  <text class="small" x="102" y="841">GET /api/match/{id}/video streams MP4</text>
+  <text class="small" x="102" y="872">GET /api/match/{id}/stats returns JSON</text>
+
+  <!-- LLM API -->
+  <rect class="card" x="468" y="682" width="380" height="220" rx="18"/>
+  <rect x="468" y="682" width="380" height="6" rx="3" fill="#a78bfa"/>
+  <text class="card-title" x="492" y="724">FastAPI AI routes</text>
+  <text class="body" x="492" y="757">/coach · /chat · /commentary</text>
+  <text class="small" x="492" y="780">Load match stats/events; build feature-specific prompts</text>
+  <text class="body" x="492" y="818">Commentary request preparation</text>
+  <text class="small" x="492" y="841">persona + event summary, compacted to ≤ 5,000 chars</text>
+  <text class="small" x="492" y="872">API key stays on backend · failures return to UI</text>
+
+  <!-- Groq -->
+  <rect x="916" y="682" width="280" height="220" rx="18" fill="#211e43" stroke="#6d55ad" stroke-width="1.5"/>
+  <rect x="916" y="682" width="280" height="6" rx="3" fill="#c4b5fd"/>
+  <circle cx="956" cy="730" r="19" fill="#3c2c68"/>
+  <path d="M947 731h18M956 722v18M950 725l12 12M962 725l-12 12" stroke="#ddd6fe" stroke-width="1.7" opacity=".9"/>
+  <text class="card-title" x="988" y="736">Groq API</text>
+  <text class="tag" x="940" y="780" fill="#c4b5fd">QWEN · qwen3.8-27b</text>
+  <text class="small" x="940" y="808">Structured coaching report</text>
+  <text class="small" x="940" y="831">Match Q&amp;A answer</text>
+  <text class="small" x="940" y="854">Timestamped commentary JSON</text>
+  <text class="small" x="940" y="879" fill="#fcd34d">ElevenLabs voice generated on demand per line</text>
+
+  <!-- UI result -->
+  <rect class="card" x="1260" y="682" width="286" height="220" rx="18"/>
+  <rect x="1260" y="682" width="286" height="6" rx="3" fill="#38bdf8"/>
+  <text class="card-title" x="1284" y="724">Results in the browser</text>
+  <circle cx="1290" cy="758" r="4" fill="#38bdf8"/>
+  <text class="body" x="1305" y="763">Video + match statistics</text>
+  <circle cx="1290" cy="798" r="4" fill="#a78bfa"/>
+  <text class="body" x="1305" y="803">Coach report + match chat</text>
+  <circle cx="1290" cy="838" r="4" fill="#34d399"/>
+  <text class="body" x="1305" y="843">Timed text + Play voice controls</text>
+  <text class="small" x="1284" y="877">Voice is not auto-synced or muxed into video</text>
+
+  <!-- Lower flow -->
+  <path d="M400 792H458" class="flow" stroke="#8293ad" marker-end="url(#arrow-muted)"/>
+  <text class="flow-label" x="429" y="770" text-anchor="middle">load</text>
+  <path d="M848 792H906" class="flow" stroke="#a78bfa" marker-end="url(#arrow-violet)"/>
+  <text class="flow-label" x="877" y="770" text-anchor="middle">prompt</text>
+  <path d="M906 862H848" class="flow" stroke="#a78bfa" marker-end="url(#arrow-violet)"/>
+  <text class="flow-label" x="877" y="887" text-anchor="middle">JSON</text>
+  <path d="M1196 792H1252" class="flow" stroke="#22d3ee" marker-end="url(#arrow-cyan)"/>
+  <text class="flow-label" x="1224" y="770" text-anchor="middle">response</text>
+
+  <!-- Upload response to frontend -->
+  <path d="M610 554V602H218V562" fill="none" stroke="#8293ad" stroke-width="2" stroke-dasharray="7 7" marker-end="url(#arrow-muted)"/>
+  <rect x="350" y="586" width="198" height="24" rx="12" fill="#111e35"/>
+  <text class="flow-label" x="449" y="603" text-anchor="middle">match ID + video URL</text>
+
+  <!-- Footer -->
+  <rect x="78" y="946" width="1468" height="112" rx="16" fill="#101d32" stroke="#2b3d58"/>
+  <text class="tag" x="102" y="977" fill="#7dd3fc">READ THE FLOW</text>
+  <text class="body" x="102" y="1005">Solid cyan = video/API flow</text>
+  <text class="body" x="355" y="1005">Green = CV outputs</text>
+  <text class="body" x="575" y="1005">Violet = Groq request/response</text>
+  <text class="body" x="882" y="1005">Dashed = upload result returned to UI</text>
+  <text class="small" x="102" y="1034">Important: CV processing is synchronous from the user's perspective (the upload waits). The browser receives a result only when CV and MP4 conversion finish.</text>
+</svg>

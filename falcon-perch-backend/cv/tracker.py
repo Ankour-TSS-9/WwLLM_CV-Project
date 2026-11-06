@@ -1,5 +1,6 @@
 import os
 import pickle
+import time
 import sys
 from bisect import bisect_left
 
@@ -386,6 +387,8 @@ class ImprovedTracker:
         batch_size = 20
         detections = []
         imgsz = getattr(self, "_imgsz_override", config.INFERENCE_IMGSZ)
+        total_batches = (len(frames) + batch_size - 1) // batch_size
+        started_at = time.monotonic()
         for i in range(0, len(frames), batch_size):
             detections_batch = self.model.predict(
                 frames[i : i + batch_size],
@@ -398,6 +401,15 @@ class ImprovedTracker:
                 verbose=False,
             )
             detections += detections_batch
+            batch_number = i // batch_size + 1
+            if batch_number % 10 == 0 or batch_number == total_batches:
+                processed_frames = min(i + batch_size, len(frames))
+                elapsed = time.monotonic() - started_at
+                print(
+                    f"  Object detection: batch {batch_number}/{total_batches} "
+                    f"({processed_frames}/{len(frames)} frames, {elapsed:.1f}s elapsed)",
+                    flush=True,
+                )
         return detections
 
     def _class_lookup(self, names):
